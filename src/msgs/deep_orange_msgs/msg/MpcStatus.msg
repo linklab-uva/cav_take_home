@@ -1,0 +1,7 @@
+string solver_status
+uint8 hpipm_status
+uint8 iter
+float64 max_res_stat
+float64 max_res_eq
+float64 max_res_ineq
+float64 max_res_comp

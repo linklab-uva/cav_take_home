@@ -1,0 +1,6 @@
+trajectory_propagator:
+  ros__parameters:
+    track_name: 'dspace-monza'
+    prediction_horizon: 5.0
+    max_prediction_dist: 400.0
+    publish_prediction: true

@@ -1,0 +1,5 @@
+builtin_interfaces/Time stamp
+float32 fl_tire_temperature
+float32 fr_tire_temperature
+float32 rl_tire_temperature
+float32 rr_tire_temperature

@@ -1,0 +1,141 @@
+## Build and Install Folders
+/build
+/build_galactic
+/install
+/install_galactic
+/log
+/log_galactic
+/build_isolated
+/install_isolated
+/devel
+/dockerimages/dspace_sim/uva-stack/sample_controller/ros_ws/install/
+/dockerimages/dspace_sim/uva-stack/sample_controller/ros_ws/build/
+/dockerimages/dspace_sim/uva-stack/sample_controller/ros_ws/log/
+/dockerimages/car_image/Vimba_6_0/
+/dockerimages/car_image/VimbaX_2024-1/
+*cmake-build*
+
+# clangd
+.cache
+
+# clangd
+.cache
+
+## Python Artifacts
+__pycache__/
+.eggs/
+
+## VCS Location for External Repos
+src/external/**
+
+## Coverage and Doxygen Artifacts
+lcov/
+.cov/
+html/
+xml/
+latex/
+.coverage*
+.msg.md
+/docs/_build
+/docs/*.png
+/coverage
+lcov.base
+lcov.test
+lcov.total
+lcov.total.filtered
+
+## XCode Artifacts
+.DS_Store
+xcuserdata/
+
+## CLion Artifacts
+cmake-build-debug
+.cmake-build-debug
+.idea
+
+## Clang Complete Artifacts (used by Atom)
+/.clang_complete
+/tags
+
+## Valgrind and Callgrind
+vgcore.*
+*.log
+*.out*
+
+## Vizdep
+*.dot
+*.pickle
+
+## X-Compile Artifacts
+target_fs/
+
+## Miscellaneous
+*.cmd
+*.tmp
+*.user
+*.db
+*.opendb
+*.swp
+*.swo
+*.gch
+*.patch
+*.diff
+docs/Doxyfile
+
+# apptainer image files
+*.sif
+.nfs*
+
+# apptainer image files
+*.sif
+
+## python notebook checkpoints
+*.ipynb_checkpoints/
+
+external
+rosbag2*
+
+.gitlab-ci-local/
+
+drivers/ros2_iris_driver/lib/vsomeip
+src/perception/camera_calibration/data/
+
+# VS Code workspace settings
+/.vscode/*
+.vs
+
+# These are fine to commit because they should not change
+!/.vscode/extensions.json
+
+# neovim lsp configurations
+.null-ls*
+
+# bag files
+*.mcap
+*.db3
+metadata.yaml
+
+# Slurm Scripts, core dumps and latex build artifacts
+.slurm-scripts
+core.*
+*.aux
+*.tex
+*.log
+*.toc
+junit-report.xml
+test_cases.json
+packages.txt
+run-clang-tidy.py
+
+# perf data
+*.data
+
+# Python environments
+venv
+.venv
+
+# AC stuff
+src/simulation_interface/ac_interface/ac_interface/consts.py
+
+
+aws

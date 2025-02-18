@@ -1,0 +1,5 @@
+builtin_interfaces/Time stamp
+float32 slip_angle_fl
+float32 slip_angle_fr
+float32 slip_angle_rl
+float32 slip_angle_rr

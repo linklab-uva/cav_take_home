@@ -1,0 +1,2 @@
+float32 expected_frequency
+float32 ema_frequency

@@ -1,0 +1,9 @@
+std_msgs/Header header
+MeasurementHealth novatel_a
+MeasurementHealth novatel_b
+MeasurementHealth vectornav_ins_pos
+MeasurementHealth vectornav_gps
+MeasurementHealth vectornav_gps2
+MeasurementHealth wheelspeed
+MeasurementHealth vectornav_att_orientation
+MeasurementHealth exwayz_status

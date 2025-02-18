@@ -1,0 +1,11 @@
+builtin_interfaces/Duration time_since_valid
+builtin_interfaces/Duration time_since_update
+builtin_interfaces/Duration time_since_active
+MeasurementFrequency frequency
+bool valid
+bool active
+bool nan_check
+bool logical_check
+bool stdev_check
+bool frequency_check
+bool time_check

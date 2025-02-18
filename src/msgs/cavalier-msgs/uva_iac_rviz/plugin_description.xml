@@ -1,0 +1,25 @@
+<library path="uva_iac_rviz">
+  <class name="uva_iac_rviz::PolynomialDisplay"
+         type="uva_iac_rviz::PolynomialDisplay"
+         base_class_type="rviz_common::Display">
+    <description>
+      Visualizes polynomials in RViz.
+    </description>
+  </class>
+
+  <class name="uva_iac_rviz::BatchDetectionDisplay"
+         type="uva_iac_rviz::BatchDetectionDisplay"
+         base_class_type="rviz_common::Display">
+    <description>
+      Visualizes batch detections in RViz.
+    </description>
+  </class>
+
+  <class name="uva_iac_rviz::BatchTracksDisplay"
+         type="uva_iac_rviz::BatchTracksDisplay"
+         base_class_type="rviz_common::Display">
+    <description>
+      Visualizes batch tracks in RViz.
+    </description>
+  </class>
+</library>

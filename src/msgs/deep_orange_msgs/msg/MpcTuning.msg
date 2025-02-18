@@ -1,0 +1,9 @@
+builtin_interfaces/Time stamp
+builtin_interfaces/Duration total_time
+builtin_interfaces/Duration solver_time
+builtin_interfaces/Duration setup_time
+float32 lateral_error
+float32 heading_error
+float32 velocity_error
+MpcStatus status
+MpcCost solution
