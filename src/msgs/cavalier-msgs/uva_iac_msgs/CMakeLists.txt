@@ -17,7 +17,8 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(autoware_auto_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
@@ -33,10 +34,11 @@ file(GLOB srv_files
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
   ${srv_files}
-  DEPENDENCIES autoware_auto_msgs std_msgs 
+  DEPENDENCIES std_msgs nav_msgs geometry_msgs
 )
-ament_export_dependencies(autoware_auto_msgs)
 ament_export_dependencies(rosidl_default_runtime)
 ament_export_dependencies(std_msgs)
+ament_export_dependencies(nav_msgs)
+ament_export_dependencies(geometry_msgs)
 
 ament_package()
