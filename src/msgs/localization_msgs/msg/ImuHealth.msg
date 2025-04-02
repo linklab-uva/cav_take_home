@@ -1,4 +1,0 @@
-std_msgs/Header header
-MeasurementHealth novatel_a_imu
-MeasurementHealth novatel_b_imu
-MeasurementHealth vectornav_imu
