@@ -9,22 +9,27 @@ What is expected (in decreasing order of importance)
 4. High quality code (i.e. clean code, good variable names, etc.)
 5. Completing all four tasks
 
-## Task 1: Create a C++ ROS2 package inside of src/
+## Task 0: Install ROS2
+
+Robot Operating System (ROS) is a set of packages we use to develop our entire racing stack. The first step of this take home assignment is to install these packages. These instructions are easiest to follow using Linux (Ubuntu 22.04). We recommend using Linux natively with dual boot.
+
+Linux: https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html
+
+If this is not possible, we have some instructions to install it on macOS or Windows.
+
+macOS:
+
+Windows (WSL):
+
+## Task 1: RACECAR Dataset
+
+Provided here (https://github.com/linklab-uva/RACECAR_DATA) is a link to a public dataset our team has published. In it is an explanation of the data and tutorials that explain how to use it. After installing ROS2, please follow Tutorial 1 & 2.
+
+## Task 2: Create a C++ ROS2 package inside of src/
 
 Use this tutorial as an example: https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html
 
 You can also reference the `trajectory_propagator` package for a example of how to write nodes (NOTE: this package won't build here because we haven't included all the necessary dependencies)
-
-## Task 2
-
-
-
-## Task 3
-
-
-
-## Task 4
-
 
 
 ## Getting Started + Tips Tricks
