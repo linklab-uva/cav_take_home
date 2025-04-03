@@ -31,15 +31,44 @@ Provided here (https://github.com/linklab-uva/RACECAR_DATA) is a link to a publi
 
 There is a take_home package we have incluced with some stub code. Add to this ROS node some metrics, and create a seperate topic for each metric.
 
-### A. Wheel Slip
+### A. Wheel Slip Ratio
 
-Wheel slip is the difference in the rotational speed of the wheel and the actual linear speed of the car. 
+Wheel slip ratio is the ratio in the rotational speed of the wheel and the actual linear speed of the car. 
 
 Relevant topics:
 - Vehicle Odometry (i.e. Pose and Twist) `/vehicle/uva_odometry`
-- Wheel Speed: ``
+- Wheel Speed: `/raptor_dbw_interface/wheel_speed_report`
 
-Formula for computing wheel slip:
+
+The formula for calculating wheel slip ratio varies slightly between each of the four wheels. For the rear right wheel, we have the following formula:
+
+$vx_{rr} = v_x - 0.5 * \omega * w_r$
+$sr_{rr} = (v_{rr}^w - vx_{rr})/vx_{rr}$
+
+A similar calculation can be used for the rear left wheel:
+
+$vx_{rl} = v_x + 0.5 * \omega * w_r$
+$sr_{rl} = (v_{rl}^w - vx_{rl})/vx_{rl}$
+
+Here, $v_x$ refers to the car's longitudinal (forwards) linear speed in $m/s$. $\omega$ is the angular velocity (yaw rate) of the vehicle in $rad / s$. $w_r$ refers to the rear track width (the distance between left and right tire) in meters. $v^w$ refers to the wheel speed. $sr$ refers to the slip ratio of that wheel. $rr$ refers to the rear right wheel and $rl$ refers to the rear left wheel.
+
+The front two wheels have similar formulas, but they have an extra transformation calculation since their orientation varies with the steering angle. For the front right wheel the full formula is:
+
+$vx_{fr} = v_x - 0.5 * \omega * w_f$
+$vx_{fr}^\delta = cos(\delta) * vx_{fr} - sin(\delta) * vy_{fr}$
+$sr_{fr} = (v_{fr}^w - vx_{fr}^\delta)/vx_{fr}^\delta$
+
+For the front left wheel the formula is:
+
+$vx_{fl} = v_x + 0.5 * \omega * w_f$
+$vx_{fl}^\delta = cos(\delta) * vx_{fl} - sin(\delta) * vy_{fl}$
+$sr_{fl} = (v_{fl}^w - vx_{fl}^\delta)/vx_{fl}^\delta$
+
+Here, the same variables from before are used, with the addition of $\delta$, which refers to steering angle (in radians), and $w_f$, which refers to the front track width (in meters). Here, $fr$ refers to the front right wheel and $fl$ refers to the front left wheel.
+
+Use the following values for the constants:
+- **$w_f$** = 1.638
+- **$w_r$** = 1.523
 
 ### B. Slip Angle
 
@@ -47,9 +76,31 @@ Slip angle is the difference in the direction the wheels are pointing (i.e. stee
 
 Relevant topics:
 - Vehicle Odometry (i.e. Pose and Twist) `/vehicle/uva_odometry`
-- Steering Angle: ``
+- Wheel Speed: `/raptor_dbw_interface/wheel_speed_report`
+- Steering angle: `raptor_dbw_interface/steering_extended_report`
 
-Formula for computing wheel slip:
+Computing the slip angle re-utilizes some of the formulas from the slip ratio calculation. The additional formulas needed for slip angle for the rear wheels are below:
+
+$vy_r = v_y - \omega * L_r$
+$sa_{rl} = arctan(vy_r, vx_{rl})$
+$sa_{rr} = arctan(vy_r, vx_{rr})$
+
+Here, $v_y$ refers to the car's lateral (tangential) linear speed, in $m/s$. $L_r$ is to the longitudinal distance from the COG of the car to the rear wheels (in meters). $sa$ refers to the slip angle for that corresponding wheel.
+
+For the front wheels, it is a similar formula, but we have to do the same steering transformations from before:
+
+$vy_{fr} = v_y + \omega * L_f$
+$vy_{fr}^\delta = sin(\delta) * vx_{fr} + cos(\delta) * vy_{fr}$
+$vy_{fl} = v_y + \omega * L_f$
+$vy_{fl}^\delta = sin(\delta) * vx_{fl} + cos(\delta) * vy_{fl}$
+$sa_{fr} = arctan(vy_{fr}^\delta / vx_{fr}^\delta)$
+$sa_{fl} = arctan(vy_{fl}^\delta / vx_{fl}^\delta)$
+
+Here, $L_f$ is to the longitudinal distance from the COG of the car to the front wheels (in meters).
+
+Use the following values for the constants:
+- **$L_f$** = 1.7238
+- **$L_r$** = 1.248
 
 ### C. Moving average of lateral error
 
@@ -123,4 +174,3 @@ Whenever you run anything, it is critical that you source your workspace. This a
 ```{bash}
 source ~/cav_take_home/install/setup.sh
 ```
-
