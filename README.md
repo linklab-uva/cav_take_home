@@ -68,6 +68,14 @@ Relevant toipcs:
 - Top IMU: `/novatel_top/rawimu`
 - Bottom IMU: `/novatel_bottom/rawimu`
 
+### E. Lap time
+
+How long does it take in seconds for the vehicle to complete 1 lap.
+
+Relevant topics:
+- Vehicle Odometry (i.e. Pose and Twist) `/vehicle/uva_odometry`
+- Curvilinear Distance () ``
+
 ## Task 3: Run your code and visualize the results
 
 1. Please refer to the pinned message in the shared slack to get access to a ROS bag with data from our time trial run. 
@@ -76,7 +84,7 @@ Relevant toipcs:
 
 3. Play the bag with `ros2 bag play take_home.mcap`
 
-4. Foxglvoe supports making some really useful panels with plots, 3D visualization position / sensor data, and more. We have attached a panel to start with (`panel.json`) which just creates an empty plot and a 3D visualization that shows the LiDAR scans. An important part of working on the stack invovles adding to foxglove panels to visualize and plot your data, so adjust the given panel to include all of the metrics A-D above. 
+4. Foxglvoe supports making some really useful panels with plots, 3D visualization position / sensor data, and more. We have attached a panel to start with (`panel.json`) which just creates an empty plot and a 3D visualization that shows the LiDAR scans. An important part of working on the stack invovles adding to foxglove panels to visualize and plot your data, so adjust the given panel to include all of the metrics A-E above. 
 
 5. Screen record the foxglove app and play the entire bag, so we can see the metrics you computed. 
 
