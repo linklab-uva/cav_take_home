@@ -29,7 +29,7 @@ Provided here (https://github.com/linklab-uva/RACECAR_DATA) is a link to a publi
 
 ## Task 2: Write code to compute metrics
 
-There is a take_home package we have incluced with some stub code. Add to this ROS node some metrics, and create a separate topic for each metric.
+There is a take_home package we have incluced with some stub code. Add to this ROS node some metrics, and create a separate topic for each metric. Download the example bag provided in the Slack.
 
 To get started do the following:
 
@@ -183,15 +183,11 @@ Relevant topics:
 
 ## Task 3: Run your code and visualize the results
 
-1. Please refer to the pinned message in the shared slack to get access to a ROS bag with data from our time trial run. 
+1. Please refer to the pinned message in the shared slack to get access to a ROS2 bag with data from our time trial run. 
 
-2. Launch your stack with `ros2 launch 
+2. Foxglove supports making some really useful panels with plots, 3D visualization position / sensor data, and more. We have attached a panel to start with (`panel.json`) which just creates an empty plot and a 3D visualization that shows the LiDAR scans. An important part of working on the stack invovles adding to foxglove panels to visualize and plot your data, so adjust the given panel to include all of the metrics A-E above. 
 
-3. Play the bag with `ros2 bag play take_home.mcap`
-
-4. Foxglove supports making some really useful panels with plots, 3D visualization position / sensor data, and more. We have attached a panel to start with (`panel.json`) which just creates an empty plot and a 3D visualization that shows the LiDAR scans. An important part of working on the stack invovles adding to foxglove panels to visualize and plot your data, so adjust the given panel to include all of the metrics A-E above. 
-
-5. Screen record the foxglove app and play the entire bag, so we can see the metrics you computed. 
+3. Screen record the foxglove app and play the entire bag, so we can see the metrics you computed. 
 
 ## Task 4: Make a PR for your fork back into the main repository
 
