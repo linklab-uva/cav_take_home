@@ -4,7 +4,7 @@ Hello! The goal of this take-home is to give you an introduction to what it is l
 
 We want to see you become comfortable with writing code with the tools that run directly on our car and testing this code in open-loop (i.e. by replaying old data). A strong understanding of how to visualize your results will be critical to succeed here. We will evaluate every submission, along with the attached videos (further explained below), on quality and completion.
 
-This task is difficult, so we highly reccomend joining our Slack (see the bottom of this document), ask strong questions in Slack, and start this work well before the deadline. Ideally, we would like to see all these tasks finished, but the primary focus should be putting in effort for quality work. It is ok to use generative AI (this is not a homework assignment!), but in our experience ChatGPT / Claude can be misleading for working in ROS2 so don't put to much trust in it. 
+This task is difficult, so we highly reccomend joining our Slack (see the bottom of this document), ask strong questions in Slack, and start this work well before the deadline. The primary focus should be putting in effort for quality work while the secondary focus is finishing all the metrics. It is ok to use generative AI (this is not a homework assignment!), but in our experience ChatGPT / Claude can be misleading for working in ROS2 so don't put to much trust in it. 
 
 ## Task 0: Install ROS2
 
@@ -142,6 +142,8 @@ Relevant topics:
 ## Task 4: Make a PR for your fork back into the main repository
 
 Please upload your screen recording and share the link to it as a part of the PR. 
+
+**To get credit for completing any of the metrics in task 3, this step is mandatory**
 
 ## Getting Started + Tips Tricks
 
