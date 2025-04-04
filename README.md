@@ -4,7 +4,7 @@ Hello! The goal of this take-home is to give you an introduction to what it is l
 
 We want to see you become comfortable with writing code with the tools that run directly on our car and testing this code in open-loop (i.e. by replaying old data). A strong understanding of how to visualize your results will be critical to succeed here. We will evaluate every submission, along with the attached videos (further explained below), on quality and completion.
 
-This task is difficult, so we highly reccomend joining our Slack (see the bottom of this document), ask strong questions in Slack, and start this work well before the deadline. The primary focus should be putting in effort for quality work while the secondary focus is finishing all the metrics. It is ok to use generative AI (this is not a homework assignment!), but in our experience ChatGPT / Claude can be misleading for working in ROS2 so don't put to much trust in it. 
+This task is difficult, so we highly recommend joining our Slack (see the bottom of this document), ask strong questions in Slack, and start this work well before the deadline. The primary focus should be putting in effort for quality work while the secondary focus is finishing all the metrics. It is ok to use generative AI (this is not a homework assignment!), but in our experience ChatGPT / Claude can be misleading for working in ROS2 so don't put to much trust in it. 
 
 ## Task 0: Install ROS2
 
@@ -20,7 +20,7 @@ Windows (WSL):
 
 ## Task 1: RACECAR Dataset
 
-Provided here (https://github.com/linklab-uva/RACECAR_DATA) is a link to a public dataset our team has published. In it is an explanation of the data and tutorials that explain how to use it. After installing ROS2, please follow Tutorial 1 & 2. Although we aren't checking for the completion of this task explictly, it will make the following task significantly easier. One reccomendation is instead of using RViz as seen in the tutorial is to use foxglove since it is more modern and is what we use heavily in our testing.
+Provided here (https://github.com/linklab-uva/RACECAR_DATA) is a link to a public dataset our team has published. In it is an explanation of the data and tutorials that explain how to use it. After installing ROS2, please follow Tutorial 1 & 2. Although we aren't checking for the completion of this task explictly, it will make the following task significantly easier. One recommendation is instead of using RViz as seen in the tutorial is to use foxglove since it is more modern and is what we use heavily in our testing.
 
 1. Install foxglove https://foxglove.dev/ and `sudo apt install ros-humble-foxglove-bridge`
 
