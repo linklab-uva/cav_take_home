@@ -1,7 +1,9 @@
 #pragma once
 
+// Here we include message types which we can subscribe to or publish
 #include <std_msgs/msg/float32.hpp>
-#include <nav_msgs/msg/odometry.hpp>
+#include <nav_msgs/msg/odometry.hpp> 
+#include <raptor_dbw_msgs/msg/wheel_speed_report.hpp>
 
 #include <rclcpp/node.hpp>
 #include <rclcpp/node_options.hpp>
