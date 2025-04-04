@@ -207,13 +207,6 @@ git clone git@github.com:linklab-uva/cav_take_home.git
 
 In ROS 2 we use `colcon` for building all of our packages. Always build your packages from `~/cav_take_home`
 
-### Join the Slack to ask questions
-
-(must join with @virginia.edu email)
-https://join.slack.com/t/cavaliertakehomeslack/shared_invite/zt-309wg9j29-RbvdsdKOC7ls_C34z7jGNw
-
-Please email `mcj2vb@virginia.edu` or `ark8su@virginia.edu` if this link expires.
-
 If there is **any** questions or ambiguities please send a message in `#all-cavalier-take-home-slack`. We encourage you to ask questions in this Slack channel so everyone can benefit from the answers. Furthermore, join `#office-hours` to stop by and get help in person. 
 
 ### Building All Relevant Messages
