@@ -18,6 +18,12 @@ macOS:
 
 Windows (WSL):
 
+After installing ROS2, make sure to install the following dependencies.
+
+```
+sudo apt install ros-humble-camera-info-manager ros-humble-backward-ros ros-humble-ros2-socketcan ros-humble-image-proc ros-humble-camera-info-manager ros-humble-stereo-image-proc ros-humble-tracetools-image-pipeline ros-humble-udp-msgs ros-humble-rviz-common ros-humble-geographic-msgs ros-humble-angles ros-humble-osrf-testing-tools-cpp ros-humble-ament-cmake-google-benchmark ros-humble-random-numbers ros-humble-ros-testing ros-humble-point-cloud-msg-wrapper ros-humble-automotive-platform-msgs ros-humble-apex-test-tools ros-humble-pcl-ros ros-humble-joy-linux ros-humble-sensor-msgs-py ros-humble-gps-msgs ros-humble-nmea-msgs ros-humble-gps-tools ros-humble-can-msgs ros-humble-tf-transformations ros-humble-ament-cmake-nose ros-humble-rmw-cyclonedds-cpp ros-humble-rosbag2-storage-mcap ros-humble-camera-calibration ros-humble-foxglove-bridge -y
+```
+
 ## Task 1: RACECAR Dataset
 
 Provided here (https://github.com/linklab-uva/RACECAR_DATA) is a link to a public dataset our team has published. In it is an explanation of the data and tutorials that explain how to use it. After installing ROS2, please follow Tutorial 1 & 2. Although we aren't checking for the completion of this task explictly, it will make the following task significantly easier. One recommendation is instead of using RViz as seen in the tutorial is to use foxglove since it is more modern and is what we use heavily in our testing.
