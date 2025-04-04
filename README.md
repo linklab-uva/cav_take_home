@@ -8,7 +8,7 @@ This task is difficult, so we highly recommend joining our Slack (see the bottom
 
 ## Task 0: Install ROS2
 
-Robot Operating System (ROS) is a set of packages we use to develop our entire racing stack. The first step of this take home assignment is to install these packages. These instructions are easiest to follow using Linux (Ubuntu 22.04). We recommend using Linux natively with dual boot.
+Robot Operating System (ROS) is a set of packages we use to develop our entire racing stack. The first step of this take home assignment is to install these packages. **Make sure to install version humble.** These instructions are easiest to follow using Linux (Ubuntu 22.04). We recommend using Linux natively with dual boot.
 
 Linux: https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html
 
