@@ -79,27 +79,29 @@ Relevant topics:
 
 The formula for calculating wheel slip ratio varies slightly between each of the four wheels. For the rear right wheel, we have the following formula:
 
-$vx_{rr} = v_x - 0.5 * \omega * w_r$
-$sr_{rr} = (v_{rr}^w - vx_{rr})/vx_{rr}$
+$v_{x,rr} = v_x - 0.5 * \omega * w_r$
+
+$\kappa_{rr} = (v_{rr}^w - v_{x,rr})/v_{x,rr}$
 
 A similar calculation can be used for the rear left wheel:
 
-$vx_{rl} = v_x + 0.5 * \omega * w_r$
-$sr_{rl} = (v_{rl}^w - vx_{rl})/vx_{rl}$
+$v_{x,rl} = v_x + 0.5 * \omega * w_r$
 
-Here, $v_x$ refers to the car's longitudinal (forwards) linear speed in $m/s$. $\omega$ is the angular velocity (yaw rate) of the vehicle in $rad / s$. $w_r$ refers to the rear track width (the distance between left and right tire) in meters. $v^w$ refers to the wheel speed. $sr$ refers to the slip ratio of that wheel. $rr$ refers to the rear right wheel and $rl$ refers to the rear left wheel.
+$\kappa_{rl} = (v_{rl}^w - v_{x,rl})/v_{x,rl}$
+
+Here, $v_x$ refers to the car's longitudinal (forwards) linear speed in $m/s$. $\omega$ is the angular velocity (yaw rate) of the vehicle in $rad / s$. $w_r$ refers to the rear track width (the distance between left and right tire) in meters. $v^w$ refers to the wheel speed. $\kappa$ refers to the slip ratio of that wheel. $rr$ refers to the rear right wheel and $rl$ refers to the rear left wheel.
 
 The front two wheels have similar formulas, but they have an extra transformation calculation since their orientation varies with the steering angle. For the front right wheel the full formula is:
 
-$vx_{fr} = v_x - 0.5 * \omega * w_f$
-$vx_{fr}^\delta = cos(\delta) * vx_{fr} - sin(\delta) * vy_{fr}$
-$sr_{fr} = (v_{fr}^w - vx_{fr}^\delta)/vx_{fr}^\delta$
+$v_{x,fr} = v_x - 0.5 * \omega * w_f$
+$v_{x,fr}^\delta = cos(\delta) * v_{x,fr} - sin(\delta) * v_{y,fr}$
+$\alpha_{fr} = (v_{fr}^w - v_{x,fr}^\delta)/v_{x,fr}^\delta$
 
 For the front left wheel the formula is:
 
-$vx_{fl} = v_x + 0.5 * \omega * w_f$
-$vx_{fl}^\delta = cos(\delta) * vx_{fl} - sin(\delta) * vy_{fl}$
-$sr_{fl} = (v_{fl}^w - vx_{fl}^\delta)/vx_{fl}^\delta$
+$v_{x,fl} = v_x + 0.5 * \omega * w_f$
+$v_{x,fl}^\delta = cos(\delta) * v_{x,fl} - sin(\delta) * v_{y,fl}$
+$\alpha_{fl} = (v_{fl}^w - v_{x,fl}^\delta)/v_{x,fl}^\delta$
 
 Here, the same variables from before are used, with the addition of $\delta$, which refers to steering angle (in radians), and $w_f$, which refers to the front track width (in meters). Here, $fr$ refers to the front right wheel and $fl$ refers to the front left wheel.
 
