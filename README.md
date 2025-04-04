@@ -29,7 +29,7 @@ Provided here (https://github.com/linklab-uva/RACECAR_DATA) is a link to a publi
 
 ## Task 2: Write code to compute metrics
 
-There is a take_home package we have incluced with some stub code. Add to this ROS node some metrics, and create a seperate topic for each metric.
+There is a take_home package we have incluced with some stub code. Add to this ROS node some metrics, and create a separate topic for each metric.
 
 To get started do the following:
 
@@ -52,14 +52,14 @@ source install/setup.bash
 ros2 run take_home take_home_node
 ```
 
-4. In a seperate terminal, source your installation folder, and run the bag file.
+4. In a separate terminal, source your installation folder, and run the bag file.
 
 ```
 source install/setup.bash
 ros2 bag play -s mcap cavalier_take_home.mcap
 ```
 
-5. In a seperate terminal, run the following.
+5. In a separate terminal, run the following.
 
 ```
 ros2 topic list
