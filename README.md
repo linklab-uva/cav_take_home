@@ -31,13 +31,50 @@ Provided here (https://github.com/linklab-uva/RACECAR_DATA) is a link to a publi
 
 There is a take_home package we have incluced with some stub code. Add to this ROS node some metrics, and create a seperate topic for each metric.
 
+To get started do the following:
+
+1. Git clone this package.
+
+2. Source ROS2 and build the template package and message dependencies. If you encounter any build issues after running the following, let us know.
+
+```
+cd ~/
+git clone https://github.com/linklab-uva/cav_take_home.git
+cd cav_take_home
+source /opt/ros/humble/setup.bash
+colcon build
+```
+
+3. To run the template node, source the install folder and run the executable.
+
+```
+source install/setup.bash
+ros2 run take_home take_home_node
+```
+
+4. In a seperate terminal, source your installation folder, and run the bag file.
+
+```
+source install/setup.bash
+ros2 bag play -s mcap cavalier_take_home.mcap
+```
+
+5. In a seperate terminal, run the following.
+
+```
+ros2 topic list
+ros2 topic echo /metrics_output
+```
+
+The template node is subscribing to a message /vehicle/uva_odometry which contains the pose (position and orientation) and twist (linear and angular velocity) of our vehicle. There is a sample calculation that processes the pose and twist of the vehicle and outputs a value to the /metrics_output topic. It is your job to compute the meaningful metrics listed below, and publish them to new topics as we have shown in the example.
+
 ### A. Wheel Slip Ratio
 
 Wheel slip ratio is the ratio in the rotational speed of the wheel and the actual linear speed of the car. 
 
 Relevant topics:
 - Vehicle Odometry (i.e. Pose and Twist) `/vehicle/uva_odometry`
-- Wheel Speed: `/raptor_dbw_interface/wheel_speed_report`
+- Wheel Speed: `/raptor_dbw_interface/wheel_speed_report` (kmph)
 
 
 The formula for calculating wheel slip ratio varies slightly between each of the four wheels. For the rear right wheel, we have the following formula:
@@ -76,31 +113,42 @@ Slip angle is the difference in the direction the wheels are pointing (i.e. stee
 
 Relevant topics:
 - Vehicle Odometry (i.e. Pose and Twist) `/vehicle/uva_odometry`
-- Wheel Speed: `/raptor_dbw_interface/wheel_speed_report`
-- Steering angle: `raptor_dbw_interface/steering_extended_report`
+- Wheel Speed: `/raptor_dbw_interface/wheel_speed_report` (kmph)
+- Steering angle: `raptor_dbw_interface/steering_extended_report` (primary_steering_angle_fbk - deg)
 
-Computing the slip angle re-utilizes some of the formulas from the slip ratio calculation. The additional formulas needed for slip angle for the rear wheels are below:
+Computing the slip angle re-utilizes some of the formulas from the slip ratio calculation. The additional formulas needed for slip angle ($\alpha$) for the rear wheels are below:
 
-$vy_r = v_y - \omega * L_r$
-$sa_{rl} = arctan(vy_r, vx_{rl})$
-$sa_{rr} = arctan(vy_r, vx_{rr})$
+$v_{y,r} = v_y - \omega * L_r$
 
-Here, $v_y$ refers to the car's lateral (tangential) linear speed, in $m/s$. $L_r$ is to the longitudinal distance from the COG of the car to the rear wheels (in meters). $sa$ refers to the slip angle for that corresponding wheel.
+$\alpha_{rl} = tan^{-1}(\frac{v_{y,r}}{v_{x,rl}})$
+
+$\alpha_{rr} = tan^{-1}(\frac{v_{y,r}}{v_{x,rr}})$
+
+Here, $v_y$ refers to the car's lateral (tangential) linear speed, in $m/s$. $l_r$ is to the longitudinal distance from the COG of the car to the rear wheels (in meters). $\alpha$ refers to the slip angle for that corresponding wheel.
+
+The report includes the steering wheel angle and needs to be converted to wheel angle. This wheel angle will be in degrees. Use a steering ratio of $15.0$ to do so:
+
+$ \text{wheel angle} = \text{steering wheel angle} / \text{steering ratio} $
 
 For the front wheels, it is a similar formula, but we have to do the same steering transformations from before:
 
-$vy_{fr} = v_y + \omega * L_f$
-$vy_{fr}^\delta = sin(\delta) * vx_{fr} + cos(\delta) * vy_{fr}$
-$vy_{fl} = v_y + \omega * L_f$
-$vy_{fl}^\delta = sin(\delta) * vx_{fl} + cos(\delta) * vy_{fl}$
-$sa_{fr} = arctan(vy_{fr}^\delta / vx_{fr}^\delta)$
-$sa_{fl} = arctan(vy_{fl}^\delta / vx_{fl}^\delta)$
+$v_{y,fr} = v_y + \omega * l_f$
 
-Here, $L_f$ is to the longitudinal distance from the COG of the car to the front wheels (in meters).
+$v_{y,fr}^\delta = sin(\delta) * v_{x,fr} + cos(\delta) * v_{y,fr}$
+
+$v_{y,fl} = v_y + \omega * l_f$
+
+$v_{y,fl}^\delta = sin(\delta) * v_{x,fl} + cos(\delta) * v_{y,fl}$
+
+$\alpha_{fr} = tan^{-1}(v_{y,fr}^\delta / v_{x,fr}^\delta)$
+
+$\alpha_{fl} = tan^{-1}(v_{y,fl}^\delta / v_{x,fl}^\delta)$
+
+Here, $l_f$ is to the longitudinal distance from the COG of the car to the front wheels (in meters). Make sure to mind the units for the input to trigonometric methods. 
 
 Use the following values for the constants:
-- **$L_f$** = 1.7238
-- **$L_r$** = 1.248
+- **$l_f$** = 1.7238
+- **$l_r$** = 1.248
 
 ### C. Moving average of lateral error
 
@@ -109,7 +157,7 @@ Part of our racing stack is the planner which creates a reference line for the v
 To smooth out this signal, we want to compute a moving average of the reported lateral error. For this metric, compute the moving average over the published lateral errors in a `200ms` window. 
 
 Relevant topics:
-- Lateral Error: ``
+- Lateral Error: `lateral_control/lateral_error`
 
 ### D. Jitter in IMU data
 
@@ -125,7 +173,7 @@ How long does it take in seconds for the vehicle to complete 1 lap.
 
 Relevant topics:
 - Vehicle Odometry (i.e. Pose and Twist) `/vehicle/uva_odometry`
-- Curvilinear Distance () ``
+- Curvilinear Distance (Forward progress along the track in meters) `curvilinear_distance`
 
 ## Task 3: Run your code and visualize the results
 
@@ -163,6 +211,8 @@ In ROS 2 we use `colcon` for building all of our packages. Always build your pac
 https://join.slack.com/t/cavaliertakehomeslack/shared_invite/zt-309wg9j29-RbvdsdKOC7ls_C34z7jGNw
 
 Please email `mcj2vb@virginia.edu` or `ark8su@virginia.edu` if this link expires.
+
+If there is **any** questions or ambiguities please send a message in `#all-cavalier-take-home-slack`. We encourage you to ask questions in this Slack channel so everyone can benefit from the answers. Furthermore, join `#office-hours` to stop by and get help in person. 
 
 ### Building All Relevant Messages
 
