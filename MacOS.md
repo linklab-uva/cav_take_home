@@ -3,7 +3,7 @@ We will use a virtualization software called [Docker](https://www.docker.com/) t
 
 ## Docker setup
 First, install docker:
-If you have brew, you can run `brew install docker`. Otherwise, follow the [installation instructions](https://docs.docker.com/desktop/setup/install/mac-install/#:~:text=GB%20of%20RAM.-,Install%20and%20run%20Docker%20Desktop%20on%20Mac,-Tip).
+If you have brew, you can run `brew install docker`. Otherwise, follow the [installation instructions here](https://docs.docker.com/desktop/setup/install/mac-install/#:~:text=GB%20of%20RAM.-,Install%20and%20run%20Docker%20Desktop%20on%20Mac,-Tip).
 
 Next, pull the Ubuntu 22.04 image: `docker image pull ubuntu:22.04`
 
@@ -13,7 +13,10 @@ REPOSITORY                TAG       IMAGE ID       CREATED        SIZE
 ubuntu                    22.04     560582227a09   2 months ago   69.2MB
 ```
 
-Now, create container from the image: `docker run -it --name cav_container -p 2222:22 -p 8765:8765 -d [image_id]`. So, in the example above, you would run `docker run -it --name cav_container -p 2222:22 -p 8765:8765 -d 560582227a09`.
+Now, create container from the image: `docker run -it --name cav_container -p 2222:22 -p 8765:8765 -d [image_id]`. So, in the example above, you would run 
+```
+docker run -it --name cav_container -p 2222:22 -p 8765:8765 -d 560582227a09
+```
 
 Now, running `docker container ls -a` should show the newly created container:
 
@@ -41,7 +44,7 @@ Done.
 root@9be6f749e534:/# exit
 ```
 
-Now, run the following commands to enter the container as the user you just created and set up some stuff. These commands enable you to ssh into your container (which you will need later for some visualization steps).
+Now, run the following commands to enter the container as the user you just created and set up SSH. [SSH](https://en.wikipedia.org/wiki/Secure_Shell) is a way that you can access the Docker container using its IP address. These commands enable you to ssh into your container (which you will need later for some visualization steps).
 
 ```
 docker exec -it --user [your_username] cav_container /bin/bash
