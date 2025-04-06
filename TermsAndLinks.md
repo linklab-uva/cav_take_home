@@ -1,3 +1,4 @@
+colcon: A build tool, similar to `make` for C. colcon is used to build ROS2 packages
 
 Foxglove: A tool for visualizing ROS2 nodes and topics. It can be used to visualize these topics in real-time, i.e. while the code is running. It can also be used to play a ros2 bag. There are a TON of features in Foxglove. We will be working mostly with [plots](https://docs.foxglove.dev/docs/visualization/panels/plot).
 

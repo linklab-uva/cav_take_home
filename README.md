@@ -22,7 +22,9 @@ Robot Operating System (ROS) is a framework that we use to develop our racing st
 
 Regardless of how you get to Ubuntu 22.04, you should install ROS2 using the following instructions:
 
-Linux: https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html
+Linux: https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
+
+Also install colcon: https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html
 
 Also install foxglove https://foxglove.dev/ and `sudo apt install ros-humble-foxglove-bridge`
 
@@ -225,7 +227,7 @@ We want to see the following values published on new topics:
 
 ## Task 3: Run your code and visualize the results
 
-1. Please refer to the pinned message in the shared slack to get access to a ROS2 bag with data from our time trial run. 
+1. Please refer to the pinned message in the shared slack to get access to a ROS2 bag with data from our time trial run. If you are using MacOS, refer to the MacOS instructions for how to get this file into Docker.
 
 2. Launch foxglove and launch the foxglove bridge `ros2 launch foxglove_bridge foxglove_bridge_launch.xml`. Make sure you source your install before launching the bridge (see below about sourcing).
 
