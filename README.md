@@ -1,10 +1,16 @@
 # Cavalier Autonomous Racing
 
-Hello! The goal of this take-home is to give you an introduction to what it is like to work with C++ / ROS2 and data we record during every run. 
+Hello! The goal of these take-home tasks is to provide an introduction of some of the tools we use in our stack. These tools include C++ and ROS2, which you will learn about if you haven't already used them.
 
-We want to see you become comfortable with writing code with the tools that run directly on our car and testing this code in open-loop (i.e. by replaying old data). A strong understanding of how to visualize your results will be critical to succeed here. We will evaluate every submission, along with the attached videos (further explained below), on quality and completion.
+We want to see you become comfortable with writing code with the tools that run directly on our car and seeing some examples of real data from our car. You will visualize your results, and submit screen recordings of these visualizations as well as a GitHub repository with your code. We evaluate every submission on quality and completion of the tasks.
 
-This task is difficult, so we highly recommend joining our Slack (see the bottom of this document), ask strong questions in Slack, and start this work well before the deadline. The primary focus should be putting in effort for quality work while the secondary focus is finishing all the metrics. It is ok to use generative AI (this is not a homework assignment!), but in our experience ChatGPT / Claude can be misleading for working in ROS2 so don't put to much trust in it. 
+These tasks are definitely not easy, so we highly recommend joining our Slack. If there are **any** questions or ambiguities in the instructions, please send a message in `#all-cavalier-take-home-slack`. We encourage you to ask questions in this Slack channel so everyone can benefit from the answers. Furthermore, join `#office-hours` to stop by and get help in person.
+
+Try your best and put in quality work – completing and understanding two tasks is better than ChatGPT-ing your way through all without understanding anything. You can definitely use generative AI to help, but don't rely on it too much; it can often be misleading for working with ROS2.
+
+If you come across an unfamiliar word, first check the [TermsAndLinks](./TermsAndLinks.md) document.
+
+With that said, let's dive in.
 
 ## Task 0: Install ROS2
 
@@ -208,8 +214,6 @@ git clone git@github.com:linklab-uva/cav_take_home.git
 ### Building
 
 In ROS 2 we use `colcon` for building all of our packages. Always build your packages from `~/cav_take_home`
-
-If there is **any** questions or ambiguities please send a message in `#all-cavalier-take-home-slack`. We encourage you to ask questions in this Slack channel so everyone can benefit from the answers. Furthermore, join `#office-hours` to stop by and get help in person. 
 
 ### Building All Relevant Messages
 
