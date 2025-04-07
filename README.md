@@ -91,6 +91,7 @@ If you are interested in what this metric means check out: https://en.wikipedia.
 Relevant topics:
 - Vehicle Odometry (i.e. Pose and Twist) `/vehicle/uva_odometry`
 - Wheel Speed: `/raptor_dbw_interface/wheel_speed_report` (kmph)
+- Steering Wheel Angle `/raptor_dbw_interface/steering_extended_report` (deg)
 
 
 The formula for calculating wheel slip ratio varies slightly between each of the four wheels. For the rear right wheel, we have the following formula:
@@ -107,7 +108,14 @@ $\kappa_{rl} = (v_{rl}^w - v_{x,rl})/v_{x,rl}$
 
 Here, $v_x$ refers to the car's longitudinal (forwards) linear speed in $m/s$. $\omega$ is the angular velocity (yaw rate) of the vehicle in $rad / s$. $w_r$ refers to the rear track width (the distance between left and right tire) in meters. $v^w$ refers to the wheel speed. $\kappa$ refers to the slip ratio of that wheel. $rr$ refers to the rear right wheel and $rl$ refers to the rear left wheel.
 
-The front two wheels have similar formulas, but they have an extra transformation calculation since their orientation varies with the steering angle. For the front right wheel the full formula is:
+The front two wheels have similar formulas, but they have an extra transformation calculation since their orientation varies with the wheel angle. To get the wheel angle you can use the following topic `/raptor_dbw_interface/steering_extended_report`. There should be a field that describes the measured rotational angle in degrees of the steering motor in
+
+`float32 primary_steering_angle_fbk`.
+
+To get the wheel angle, use this value and divide by a steering ratio $15.0$. Use this wheel angle as $\delta$ in the following transformations.
+
+
+For the front right wheel the full formula is:
 
 $v_{x,fr} = v_x - 0.5 * \omega * w_f$
 
