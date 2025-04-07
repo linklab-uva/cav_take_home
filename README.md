@@ -169,6 +169,8 @@ We want to see the following values published on new topics:
 
 4. Screen record the foxglove app and play the entire bag, so we can see the metrics you computed. 
 
+For an example of how to launch foxglove and create a plot to visualize your metric in realtime, you can refer to [this example video](https://drive.google.com/file/d/1MFAJuCiuM2APs_FErlB4Ts95pXXj2gts/view?usp=sharing)
+
 ## Task 4: Make a PR for your fork back into the main repository
 
 Please upload your screen recording and share the link to it as a part of the PR. 
