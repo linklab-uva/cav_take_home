@@ -64,7 +64,7 @@ Recap:
 We now have a container that we can use for all of our development. MAKE SURE NOT TO DELETE THE CONTAINER UNLESS YOU HAVE BACKED IT UP TO AN IMAGE OTHERWISE YOU WILL LOSE ALL YOUR WORK. Stopping the container is ok. You can save your container to an image by running a command like `docker commit --pause cav_container cav_save/cav_save:snapshot1`. See [the docs for more details](https://docs.docker.com/reference/cli/docker/container/commit/).
 
 
-Now, follow the instructions above for [installing ROS](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html) and continue with the following tasks. Reach out on the Slack if you have any questions. Make sure to do these instructions inside the container (by running `docker exec`).
+Now, follow the instructions in the docs for [installing ROS](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html) and [colcon](https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html) and continue with the following tasks. Reach out on the Slack if you have any questions. Make sure to do these instructions inside the container (by running `docker exec`).
 
 ## Writing Code
 
@@ -74,3 +74,11 @@ In later steps you will need to write code. Use [VSCode's SSH](https://code.visu
 In later steps, you will see "RViz" or "Foxglove". Use Foxglove for visualization (RViz does not work nicely on Mac).
 
 Click "Open connection..." on Foxglove and use "ws://localhost:8765" as the websocket URL. For more detailed instructions on using Foxglove, see the main README file. This will show you how to set up the Foxglove bridge to use Foxglove.
+
+## Getting Files into Docker
+After you install git into your Docker container, you can clone the repository directly into your docker container.
+
+You can move files from your local computer to the docker container using the [scp] (https://stackoverflow.com/questions/19945881/copy-file-folder-using-scp-command) utility. For example, if you downloaded the `cavalier_take_home.mcap` file to `~/Downloads/` on your local computer and want to move it to your Docker container, you can run the following command from your computer:
+```
+scp -P 2222 ~/Downloads/cavalier_take_home.mcap akash@localhost:~/
+```
