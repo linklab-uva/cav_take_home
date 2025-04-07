@@ -80,10 +80,7 @@ ros2 topic list
 ros2 topic echo /metrics_output
 ```
 
-The template node is subscribing to a message /vehicle/uva_odometry which contains the pose (position and orientation) and twist (linear and angular velocity) of our vehicle. There is a sample calculation that processes the pose and twist of the vehicle and outputs a value to the /metrics_output topic. It is your job to compute the meaningful metrics listed below, and publish them to new topics as we have shown in the example. We want to see at least **three metrics computed** as described below. 
-1. A (Wheel Slip) or B (Slip Angle)
-2. C (Lateral error average) or D (IMU Jitter)
-3. E (Lap Time)
+The template node is subscribing to a message /vehicle/uva_odometry which contains the pose (position and orientation) and twist (linear and angular velocity) of our vehicle. There is a sample calculation that processes the pose and twist of the vehicle and outputs a value to the /metrics_output topic. It is your job to compute the meaningful metrics listed below, and publish them to new topics as we have shown in the example. 
 
 ### A. Wheel Slip Ratio
 
@@ -139,70 +136,7 @@ We want to see the following values published on new topics:
 - `slip/long/fl`:  $\kappa_{fl}$
 - `slip/long/fr`:  $\kappa_{fr}$
 
-### B. Slip Angle
-
-Slip angle is the difference in the direction the wheels are pointing (i.e. steering angle) and the direction the vehicle is actually moving (i.e. linear velocity).
-
-If you are interested in what this metric means and its significance check out https://en.wikipedia.org/wiki/Slip_angle, but for this exercise we will give all the formulas and your job is to just implement them and show the ability to compute a metric from a given formula and publish it to a topic. 
-
-Relevant topics:
-- Vehicle Odometry (i.e. Pose and Twist) `/vehicle/uva_odometry`
-- Wheel Speed: `/raptor_dbw_interface/wheel_speed_report` (kmph)
-- Steering angle: `raptor_dbw_interface/steering_extended_report` (primary_steering_angle_fbk - deg)
-
-Computing the slip angle re-utilizes some of the formulas from the slip ratio calculation. The additional formulas needed for slip angle ($\alpha$) for the rear wheels are below:
-
-$v_{y,r} = v_y - \omega * L_r$
-
-$\alpha_{rl} = tan^{-1}(\frac{v_{y,r}}{v_{x,rl}})$
-
-$\alpha_{rr} = tan^{-1}(\frac{v_{y,r}}{v_{x,rr}})$
-
-Here, $v_y$ refers to the car's lateral (tangential) linear speed, in $m/s$. $l_r$ is to the longitudinal distance from the COG of the car to the rear wheels (in meters). $\alpha$ refers to the slip angle for that corresponding wheel.
-
-The report includes the steering wheel angle and needs to be converted to wheel angle. This wheel angle will be in degrees. Use a steering ratio of $15.0$ to do so:
-
-$ \text{wheel angle} = \text{steering wheel angle} / \text{steering ratio} $
-
-For the front wheels, it is a similar formula, but we have to do the same steering transformations from before:
-
-$v_{y,fr} = v_y + \omega * l_f$
-
-$v_{y,fr}^\delta = sin(\delta) * v_{x,fr} + cos(\delta) * v_{y,fr}$
-
-$v_{y,fl} = v_y + \omega * l_f$
-
-$v_{y,fl}^\delta = sin(\delta) * v_{x,fl} + cos(\delta) * v_{y,fl}$
-
-$\alpha_{fr} = tan^{-1}(v_{y,fr}^\delta / v_{x,fr}^\delta)$
-
-$\alpha_{fl} = tan^{-1}(v_{y,fl}^\delta / v_{x,fl}^\delta)$
-
-Here, $l_f$ is to the longitudinal distance from the COG of the car to the front wheels (in meters). Make sure to mind the units for the input to trigonometric methods. 
-
-Use the following values for the constants:
-- **$l_f$** = 1.7238
-- **$l_r$** = 1.248
-
-We want to see the following values published on new topics:
-- `slip/lat/rr`:  $\alpha_{rr}$
-- `slip/lat/rl`:  $\alpha_{rl}$
-- `slip/lat/fl`:  $\alpha_{fl}$
-- `slip/lat/fr`:  $\alpha_{fr}$
-
-### C. Moving average of lateral error
-
-Part of our racing stack is the planner which creates a reference line for the vehicle to follow (the optimal raceline precomputed if there are no other cars). Our lateral controller does some math to figure out the optimal steering angle / steering rate so that the vehicle stays on this raceline. Of course, no controller is perfect, so we report the lateral error we observe at every timestep (i.e. the distance off the raceline). Our goal is to see your ability to write logic that can handle messages across time intervals. 
-
-To smooth out this signal, we want to compute a moving average of the reported lateral error. For this metric, compute the moving average over the published lateral errors in a `200ms` window. 
-
-Relevant topics:
-- Lateral Error: `lateral_control/lateral_error`
-
-We want to see the computation on this topic:
-- `avg_lateral_error`
-
-### D. Jitter in IMU data
+### B. Jitter in IMU data
 
 Our car runs with two GNSS sensors from novatel which both report IMU measurements. Ideally, we would like these sensors to publish at a consistent ∆t (ie a fixed rate). Jitter is defiend as the variance of the ∆t between consecutive measurements. Compute the jitter for the top IMU and bottom IMU independently and report them to two different topics. Compute this metric using a sliding window and consider the last `1s` of data in this sliding window. Our goal is to see your ability to write logic that can handle messages across time intervals.
 
@@ -214,7 +148,7 @@ We want to see the following values published on new topics:
 - `imu_top/jitter`
 - `imu_bottom/jitter`
 
-### E. Lap time
+### C. Lap time
 
 How long does it take in seconds for the vehicle to complete 1 lap.
 
@@ -231,7 +165,7 @@ We want to see the following values published on new topics:
 
 2. Launch foxglove and launch the foxglove bridge `ros2 launch foxglove_bridge foxglove_bridge_launch.xml`. Make sure you source your install before launching the bridge (see below about sourcing).
 
-3. Foxglove supports making some really useful panels with plots, 3D visualization position / sensor data, and more. We have attached a panel to start with (`panel.json`) which just creates an empty plot and a 3D visualization that shows the LiDAR scans. An important part of working on the stack invovles adding to foxglove panels to visualize and plot your data, so adjust the given panel to include all of the metrics A-E above. 
+3. Foxglove supports making some really useful panels with plots, 3D visualization position / sensor data, and more. We have attached a panel to start with (`panel.json`) which just creates an empty plot and a 3D visualization that shows the LiDAR scans. An important part of working on the stack invovles adding to foxglove panels to visualize and plot your data, so adjust the given panel to include all of the metrics A-C above. 
 
 4. Screen record the foxglove app and play the entire bag, so we can see the metrics you computed. 
 
