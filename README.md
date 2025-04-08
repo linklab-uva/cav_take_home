@@ -152,15 +152,13 @@ We want to see the following values published on new topics:
 
 ### B. Jitter in IMU data
 
-Our car runs with two GNSS sensors from novatel which both report IMU measurements. Ideally, we would like these sensors to publish at a consistent ∆t (ie a fixed rate). Jitter is defiend as the variance of the ∆t between consecutive measurements. Compute the jitter for the top IMU and bottom IMU independently and report them to two different topics. Compute this metric using a sliding window and consider the last `1s` of data in this sliding window. Our goal is to see your ability to write logic that can handle messages across time intervals.
+Our car runs with two GNSS sensors from novatel which both report IMU measurements. Ideally, we would like these sensors to publish at a consistent ∆t (ie a fixed rate). Jitter is defiend as the variance of the ∆t between consecutive measurements. Compute the jitter for the top IMU report it. Compute this metric using a sliding window and consider the last `1s` of data in this sliding window. Our goal is to see your ability to write logic that can handle messages across time intervals.
 
 Relevant toipcs: 
 - Top IMU: `/novatel_top/rawimu`
-- Bottom IMU: `/novatel_bottom/rawimu`
 
 We want to see the following values published on new topics:
 - `imu_top/jitter`
-- `imu_bottom/jitter`
 
 ### C. Lap time
 
