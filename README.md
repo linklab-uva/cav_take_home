@@ -28,6 +28,8 @@ Also install colcon: https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libr
 
 Also install foxglove https://foxglove.dev/ and `sudo apt install ros-humble-foxglove-bridge`
 
+Also install mcap storage plugin `sudo apt install ros-humble-rosbag2-storage-mcap`
+
 ## Task 0.5: Learn Git
 
 If you haven't worked with git before it is a version control tool that helps multiple contributors work on one project. While this won't be super critical for this take-home assignment, it will be when you are a crew member. If you haven't used git before, I highly recommend learning the basics. This is one introduction courrse I found https://learn.microsoft.com/en-us/training/modules/intro-to-git/, but feel free to use whatever. 
