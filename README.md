@@ -135,12 +135,12 @@ $v_{x,fl}^\delta = cos(\delta) * v_{x,fl} - sin(\delta) * v_{y,fl}$
 
 $\kappa_{fl} = (v_{fl}^w - v_{x,fl}^\delta)/v_{x,fl}^\delta$
 
-Here, the same variables from before are used, with the addition of $\delta$, which refers to steering angle (in radians), $w_f$, which refers to the front track width (in meters), and $v_y$, which refers to the car's lateral (tangential) linear speed, in $m/s$. Here, $fr$ refers to the front right wheel and $fl$ refers to the front left wheel.
+Here, the same variables from before are used, with the addition of $\delta$, which refers to steering angle (in radians), $w_f$, which refers to the front track width (in meters), $v_y$, which refers to the car's lateral (tangential) linear speed, in $m/s$, and $l_f$, which is to the longitudinal distance from the COG of the car to the front wheels (in meters). Here, $fr$ refers to the front right wheel and $fl$ refers to the front left wheel.
 
 Use the following values for the constants:
 - **$w_f$** = 1.638
 - **$w_r$** = 1.523
-
+- **$l_f$** = 1.7238
 
 We want to see the following values published on new topics:
 - `slip/long/rr`:  $\kappa_{rr}$
