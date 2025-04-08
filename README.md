@@ -119,6 +119,8 @@ For the front right wheel the full formula is:
 
 $v_{x,fr} = v_x - 0.5 * \omega * w_f$
 
+$v_{y,fr} = v_y + \omega * l_f$
+
 $v_{x,fr}^\delta = cos(\delta) * v_{x,fr} - sin(\delta) * v_{y,fr}$
 
 $\kappa_{fr} = (v_{fr}^w - v_{x,fr}^\delta)/v_{x,fr}^\delta$
@@ -127,11 +129,13 @@ For the front left wheel the formula is:
 
 $v_{x,fl} = v_x + 0.5 * \omega * w_f$
 
+$v_{y,fl} = v_y + \omega * l_f$
+
 $v_{x,fl}^\delta = cos(\delta) * v_{x,fl} - sin(\delta) * v_{y,fl}$
 
-$\kappa{fl} = (v_{fl}^w - v_{x,fl}^\delta)/v_{x,fl}^\delta$
+$\kappa_{fl} = (v_{fl}^w - v_{x,fl}^\delta)/v_{x,fl}^\delta$
 
-Here, the same variables from before are used, with the addition of $\delta$, which refers to steering angle (in radians), and $w_f$, which refers to the front track width (in meters). Here, $fr$ refers to the front right wheel and $fl$ refers to the front left wheel.
+Here, the same variables from before are used, with the addition of $\delta$, which refers to steering angle (in radians), $w_f$, which refers to the front track width (in meters), and $v_y$, which refers to the car's lateral (tangential) linear speed, in $m/s$. Here, $fr$ refers to the front right wheel and $fl$ refers to the front left wheel.
 
 Use the following values for the constants:
 - **$w_f$** = 1.638
