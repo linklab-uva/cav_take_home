@@ -17,6 +17,7 @@ class TakeHome : public rclcpp::Node {
   void odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom_msg);
   void wheel_speed_callback(raptor_dbw_msgs::msg::WheelSpeedReport::ConstSharedPtr wheel_speed_msg);
   void steering_callback(raptor_dbw_msgs::msg::SteeringExtendedReport::ConstSharedPtr steering_msg);
+  void curvilinear_distance_callback(std_msgs::msg::Float32::ConstSharedPtr curvilinear_msg);
 
  private:
 
@@ -24,6 +25,7 @@ class TakeHome : public rclcpp::Node {
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_subscriber_;
   rclcpp::Subscription<raptor_dbw_msgs::msg::WheelSpeedReport>::SharedPtr wheel_speed_subscriber_;
   rclcpp::Subscription<raptor_dbw_msgs::msg::SteeringExtendedReport>::SharedPtr steering_subscriber_;
+  rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr curvilinear_distance_subscriber_;
   
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr metric_publisher_;
   
@@ -32,6 +34,9 @@ class TakeHome : public rclcpp::Node {
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr slip_rl_publisher_;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr slip_fr_publisher_;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr slip_fl_publisher_;
+  
+  // Lap time publisher
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr lap_time_publisher_;
   
   // Constants for slip ratio calculation
   const float w_f_ = 1.638;  // front track width in meters
@@ -48,6 +53,11 @@ class TakeHome : public rclcpp::Node {
   float latest_wheel_speed_fr_ = 0.0;
   float latest_wheel_speed_rl_ = 0.0;
   float latest_wheel_speed_rr_ = 0.0;
+  
+  // Lap time tracking variables
+  double lap_start_time_ = 0.0;  // Time when curvilinear distance was 0.0
+  bool previous_value_was_zero_ = false;  // Flag to track if previous value was 0.0
+  bool first_zero_seen_ = false;  // Flag to track if we've seen the first 0.0
   
   // Helper method to calculate slip ratios
   void calculate_and_publish_slip_ratios();

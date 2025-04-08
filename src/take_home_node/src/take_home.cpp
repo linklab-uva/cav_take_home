@@ -24,6 +24,11 @@ TakeHome::TakeHome(const rclcpp::NodeOptions& options)
       "/raptor_dbw_interface/steering_extended_report", qos_profile,
       std::bind(&TakeHome::steering_callback, this, std::placeholders::_1));
 
+    // Subscribe to curvilinear distance for lap time calculation
+    curvilinear_distance_subscriber_ = this->create_subscription<std_msgs::msg::Float32>(
+      "/curvilinear_distance", qos_profile,
+      std::bind(&TakeHome::curvilinear_distance_callback, this, std::placeholders::_1));
+
     // Original metric publisher
     metric_publisher_ = this->create_publisher<std_msgs::msg::Float32>("metrics_output", qos_profile);
     
@@ -32,6 +37,9 @@ TakeHome::TakeHome(const rclcpp::NodeOptions& options)
     slip_rl_publisher_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/rl", qos_profile);
     slip_fr_publisher_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/fr", qos_profile);
     slip_fl_publisher_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/fl", qos_profile);
+    
+    // Create publisher for lap time
+    lap_time_publisher_ = this->create_publisher<std_msgs::msg::Float32>("lap_time", qos_profile);
 }
 
 // 
@@ -86,6 +94,43 @@ void TakeHome::steering_callback(raptor_dbw_msgs::msg::SteeringExtendedReport::C
   
   // Calculate and publish slip ratios whenever we receive new steering data
   calculate_and_publish_slip_ratios();
+}
+
+/**
+ * Callback for curvilinear distance messages
+ * Calculates lap time when the vehicle completes a full lap
+ */
+void TakeHome::curvilinear_distance_callback(std_msgs::msg::Float32::ConstSharedPtr curvilinear_msg) {
+  float curvilinear_distance = curvilinear_msg->data;
+  
+  // Check if we're at distance 0.0 (beginning of a lap)
+  bool is_zero = std::abs(curvilinear_distance) < 1e-6;
+  
+  // If we're at 0.0 and the previous value wasn't 0.0, then we've completed a lap
+  if (is_zero && !previous_value_was_zero_) {
+    // Get the current time
+    double current_time = this->now().seconds();
+    
+    // If we've already seen a starting point (first 0.0), calculate lap time
+    if (first_zero_seen_) {
+      // Calculate lap time
+      double lap_time = current_time - lap_start_time_;
+      
+      // Publish lap time
+      std_msgs::msg::Float32 lap_time_msg;
+      lap_time_msg.data = static_cast<float>(lap_time);
+      lap_time_publisher_->publish(lap_time_msg);
+    } else {
+      // This is the first time we've seen 0.0, so mark this point
+      first_zero_seen_ = true;
+    }
+    
+    // Update lap start time for next lap
+    lap_start_time_ = current_time;
+  }
+  
+  // Update previous value flag
+  previous_value_was_zero_ = is_zero;
 }
 
 /**
