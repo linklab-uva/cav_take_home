@@ -28,6 +28,11 @@ TakeHome::TakeHome(const rclcpp::NodeOptions& options)
     curvilinear_distance_subscriber_ = this->create_subscription<std_msgs::msg::Float32>(
       "/curvilinear_distance", qos_profile,
       std::bind(&TakeHome::curvilinear_distance_callback, this, std::placeholders::_1));
+      
+    // Subscribe to vectornav IMU data for jitter calculation
+    vectornav_imu_subscriber_ = this->create_subscription<vectornav_msgs::msg::ImuGroup>(
+      "/vectornav/raw/imu", qos_profile,
+      std::bind(&TakeHome::vectornav_imu_callback, this, std::placeholders::_1));
 
     // Original metric publisher
     metric_publisher_ = this->create_publisher<std_msgs::msg::Float32>("metrics_output", qos_profile);
@@ -37,6 +42,9 @@ TakeHome::TakeHome(const rclcpp::NodeOptions& options)
     slip_rl_publisher_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/rl", qos_profile);
     slip_fr_publisher_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/fr", qos_profile);
     slip_fl_publisher_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/fl", qos_profile);
+    
+    // Create publisher for vectornav jitter
+    vectornav_jitter_publisher_ = this->create_publisher<std_msgs::msg::Float32>("imu_vectornav/jitter", qos_profile);
     
     // Create publisher for lap time
     lap_time_publisher_ = this->create_publisher<std_msgs::msg::Float32>("lap_time", qos_profile);
@@ -131,6 +139,64 @@ void TakeHome::curvilinear_distance_callback(std_msgs::msg::Float32::ConstShared
   
   // Update previous value flag
   previous_value_was_zero_ = is_zero;
+}
+
+/**
+ * Callback for vectornav IMU messages
+ * Tracks timestamps and calculates jitter using a sliding window
+ */
+void TakeHome::vectornav_imu_callback(vectornav_msgs::msg::ImuGroup::ConstSharedPtr imu_msg) {
+  // Extract timestamp from the message
+  double current_timestamp = imu_msg->header.stamp.sec + imu_msg->header.stamp.nanosec / 1e9;
+  
+  // Store timestamp in the deque
+  vectornav_timestamps_.push_back(current_timestamp);
+  
+  // Remove timestamps older than 1 second from the current timestamp
+  while (!vectornav_timestamps_.empty() && 
+         (current_timestamp - vectornav_timestamps_.front() > 1.0)) {
+    vectornav_timestamps_.pop_front();
+  }
+  
+  // Calculate jitter if we have at least 2 timestamps
+  if (vectornav_timestamps_.size() >= 2) {
+    calculate_and_publish_vectornav_jitter();
+  }
+}
+
+/**
+ * Calculate jitter as the variance of time intervals and publish the result
+ */
+void TakeHome::calculate_and_publish_vectornav_jitter() {
+  if (vectornav_timestamps_.size() < 2) {
+    return;  // Need at least 2 timestamps to calculate deltas
+  }
+  
+  // Calculate time deltas between consecutive timestamps
+  std::vector<double> deltas;
+  for (size_t i = 1; i < vectornav_timestamps_.size(); ++i) {
+    deltas.push_back(vectornav_timestamps_[i] - vectornav_timestamps_[i-1]);
+  }
+  
+  // Calculate mean of deltas
+  double sum = 0.0;
+  for (const double& dt : deltas) {
+    sum += dt;
+  }
+  double mean = sum / deltas.size();
+  
+  // Calculate variance (jitter)
+  double variance = 0.0;
+  for (const double& dt : deltas) {
+    double diff = dt - mean;
+    variance += diff * diff;
+  }
+  variance /= deltas.size();
+  
+  // Publish jitter (variance)
+  std_msgs::msg::Float32 jitter_msg;
+  jitter_msg.data = static_cast<float>(variance);
+  vectornav_jitter_publisher_->publish(jitter_msg);
 }
 
 /**

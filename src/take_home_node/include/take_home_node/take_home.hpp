@@ -5,10 +5,12 @@
 #include <nav_msgs/msg/odometry.hpp> 
 #include <raptor_dbw_msgs/msg/wheel_speed_report.hpp>
 #include <raptor_dbw_msgs/msg/steering_extended_report.hpp>
+#include <vectornav_msgs/msg/imu_group.hpp>
 
 #include <rclcpp/node.hpp>
 #include <rclcpp/node_options.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <deque>
 
 class TakeHome : public rclcpp::Node {
  public:
@@ -18,6 +20,7 @@ class TakeHome : public rclcpp::Node {
   void wheel_speed_callback(raptor_dbw_msgs::msg::WheelSpeedReport::ConstSharedPtr wheel_speed_msg);
   void steering_callback(raptor_dbw_msgs::msg::SteeringExtendedReport::ConstSharedPtr steering_msg);
   void curvilinear_distance_callback(std_msgs::msg::Float32::ConstSharedPtr curvilinear_msg);
+  void vectornav_imu_callback(vectornav_msgs::msg::ImuGroup::ConstSharedPtr imu_msg);
 
  private:
 
@@ -26,6 +29,7 @@ class TakeHome : public rclcpp::Node {
   rclcpp::Subscription<raptor_dbw_msgs::msg::WheelSpeedReport>::SharedPtr wheel_speed_subscriber_;
   rclcpp::Subscription<raptor_dbw_msgs::msg::SteeringExtendedReport>::SharedPtr steering_subscriber_;
   rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr curvilinear_distance_subscriber_;
+  rclcpp::Subscription<vectornav_msgs::msg::ImuGroup>::SharedPtr vectornav_imu_subscriber_;
   
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr metric_publisher_;
   
@@ -34,6 +38,9 @@ class TakeHome : public rclcpp::Node {
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr slip_rl_publisher_;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr slip_fr_publisher_;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr slip_fl_publisher_;
+  
+  // Jitter publisher
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr vectornav_jitter_publisher_;
   
   // Lap time publisher
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr lap_time_publisher_;
@@ -54,6 +61,9 @@ class TakeHome : public rclcpp::Node {
   float latest_wheel_speed_rl_ = 0.0;
   float latest_wheel_speed_rr_ = 0.0;
   
+  // Jitter calculation variables
+  std::deque<double> vectornav_timestamps_;  // Store timestamps for jitter calculation
+  
   // Lap time tracking variables
   double lap_start_time_ = 0.0;  // Time when curvilinear distance was 0.0
   bool previous_value_was_zero_ = false;  // Flag to track if previous value was 0.0
@@ -61,4 +71,7 @@ class TakeHome : public rclcpp::Node {
   
   // Helper method to calculate slip ratios
   void calculate_and_publish_slip_ratios();
+  
+  // Helper method to calculate jitter
+  void calculate_and_publish_vectornav_jitter();
 };
