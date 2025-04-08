@@ -33,6 +33,11 @@ TakeHome::TakeHome(const rclcpp::NodeOptions& options)
     vectornav_imu_subscriber_ = this->create_subscription<vectornav_msgs::msg::ImuGroup>(
       "/vectornav/raw/imu", qos_profile,
       std::bind(&TakeHome::vectornav_imu_callback, this, std::placeholders::_1));
+      
+    // Subscribe to novatel top IMU data for jitter calculation
+    novatel_imu_subscriber_ = this->create_subscription<novatel_oem7_msgs::msg::RAWIMU>(
+      "/novatel_top/rawimu", qos_profile,
+      std::bind(&TakeHome::novatel_imu_callback, this, std::placeholders::_1));
 
     // Original metric publisher
     metric_publisher_ = this->create_publisher<std_msgs::msg::Float32>("metrics_output", qos_profile);
@@ -45,6 +50,9 @@ TakeHome::TakeHome(const rclcpp::NodeOptions& options)
     
     // Create publisher for vectornav jitter
     vectornav_jitter_publisher_ = this->create_publisher<std_msgs::msg::Float32>("imu_vectornav/jitter", qos_profile);
+    
+    // Create publisher for novatel IMU jitter
+    novatel_jitter_publisher_ = this->create_publisher<std_msgs::msg::Float32>("imu_top/jitter", qos_profile);
     
     // Create publisher for lap time
     lap_time_publisher_ = this->create_publisher<std_msgs::msg::Float32>("lap_time", qos_profile);
@@ -81,11 +89,11 @@ void TakeHome::odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom_ms
  * Stores wheel speeds for all four wheels in radians per second
  */
 void TakeHome::wheel_speed_callback(raptor_dbw_msgs::msg::WheelSpeedReport::ConstSharedPtr wheel_speed_msg) {
-  // Store wheel speeds in rad/sec for slip ratio calculation
-  latest_wheel_speed_fl_ = wheel_speed_msg->front_left;
-  latest_wheel_speed_fr_ = wheel_speed_msg->front_right;
-  latest_wheel_speed_rl_ = wheel_speed_msg->rear_left;
-  latest_wheel_speed_rr_ = wheel_speed_msg->rear_right;
+  // Convert wheel speeds from km/h to m/s for slip ratio calculation
+  latest_wheel_speed_fl_ = wheel_speed_msg->front_left / 3.6f;
+  latest_wheel_speed_fr_ = wheel_speed_msg->front_right / 3.6f;
+  latest_wheel_speed_rl_ = wheel_speed_msg->rear_left / 3.6f;
+  latest_wheel_speed_rr_ = wheel_speed_msg->rear_right / 3.6f;
   
   // Calculate and publish slip ratios whenever we receive new wheel speed data
   calculate_and_publish_slip_ratios();
@@ -265,6 +273,65 @@ void TakeHome::calculate_and_publish_slip_ratios() {
   slip_rl_publisher_->publish(slip_rl_msg);
   slip_fr_publisher_->publish(slip_fr_msg);
   slip_fl_publisher_->publish(slip_fl_msg);
+}
+
+/**
+ * Callback for novatel top IMU messages
+ * Tracks timestamps and calculates jitter using a sliding window
+ */
+void TakeHome::novatel_imu_callback(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr imu_msg) {
+  // Extract timestamp from the message
+  double current_timestamp = imu_msg->header.stamp.sec + imu_msg->header.stamp.nanosec / 1e9;
+  
+  // Store timestamp in the deque
+  novatel_timestamps_.push_back(current_timestamp);
+  
+  // Remove timestamps older than 1 second from the current timestamp
+  while (!novatel_timestamps_.empty() && 
+         (current_timestamp - novatel_timestamps_.front() > 1.0)) {
+    novatel_timestamps_.pop_front();
+  }
+  
+  // Calculate jitter if we have at least 2 timestamps
+  if (novatel_timestamps_.size() >= 2) {
+    calculate_and_publish_novatel_jitter();
+  }
+}
+
+/**
+ * Calculate jitter as the variance of time intervals for novatel IMU
+ * and publish the result
+ */
+void TakeHome::calculate_and_publish_novatel_jitter() {
+  if (novatel_timestamps_.size() < 2) {
+    return;  // Need at least 2 timestamps to calculate deltas
+  }
+  
+  // Calculate time deltas between consecutive timestamps
+  std::vector<double> deltas;
+  for (size_t i = 1; i < novatel_timestamps_.size(); ++i) {
+    deltas.push_back(novatel_timestamps_[i] - novatel_timestamps_[i-1]);
+  }
+  
+  // Calculate mean of deltas
+  double sum = 0.0;
+  for (const double& dt : deltas) {
+    sum += dt;
+  }
+  double mean = sum / deltas.size();
+  
+  // Calculate variance (jitter)
+  double variance = 0.0;
+  for (const double& dt : deltas) {
+    double diff = dt - mean;
+    variance += diff * diff;
+  }
+  variance /= deltas.size();
+  
+  // Publish jitter (variance)
+  std_msgs::msg::Float32 jitter_msg;
+  jitter_msg.data = static_cast<float>(variance);
+  novatel_jitter_publisher_->publish(jitter_msg);
 }
 
 RCLCPP_COMPONENTS_REGISTER_NODE(TakeHome)

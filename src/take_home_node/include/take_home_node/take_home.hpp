@@ -6,6 +6,7 @@
 #include <raptor_dbw_msgs/msg/wheel_speed_report.hpp>
 #include <raptor_dbw_msgs/msg/steering_extended_report.hpp>
 #include <vectornav_msgs/msg/imu_group.hpp>
+#include <novatel_oem7_msgs/msg/rawimu.hpp>
 
 #include <rclcpp/node.hpp>
 #include <rclcpp/node_options.hpp>
@@ -21,6 +22,7 @@ class TakeHome : public rclcpp::Node {
   void steering_callback(raptor_dbw_msgs::msg::SteeringExtendedReport::ConstSharedPtr steering_msg);
   void curvilinear_distance_callback(std_msgs::msg::Float32::ConstSharedPtr curvilinear_msg);
   void vectornav_imu_callback(vectornav_msgs::msg::ImuGroup::ConstSharedPtr imu_msg);
+  void novatel_imu_callback(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr imu_msg);
 
  private:
 
@@ -30,6 +32,7 @@ class TakeHome : public rclcpp::Node {
   rclcpp::Subscription<raptor_dbw_msgs::msg::SteeringExtendedReport>::SharedPtr steering_subscriber_;
   rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr curvilinear_distance_subscriber_;
   rclcpp::Subscription<vectornav_msgs::msg::ImuGroup>::SharedPtr vectornav_imu_subscriber_;
+  rclcpp::Subscription<novatel_oem7_msgs::msg::RAWIMU>::SharedPtr novatel_imu_subscriber_;
   
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr metric_publisher_;
   
@@ -39,8 +42,9 @@ class TakeHome : public rclcpp::Node {
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr slip_fr_publisher_;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr slip_fl_publisher_;
   
-  // Jitter publisher
+  // Jitter publishers
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr vectornav_jitter_publisher_;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr novatel_jitter_publisher_;
   
   // Lap time publisher
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr lap_time_publisher_;
@@ -63,6 +67,7 @@ class TakeHome : public rclcpp::Node {
   
   // Jitter calculation variables
   std::deque<double> vectornav_timestamps_;  // Store timestamps for jitter calculation
+  std::deque<double> novatel_timestamps_;    // Store timestamps for novatel jitter calculation
   
   // Lap time tracking variables
   double lap_start_time_ = 0.0;  // Time when curvilinear distance was 0.0
@@ -72,6 +77,7 @@ class TakeHome : public rclcpp::Node {
   // Helper method to calculate slip ratios
   void calculate_and_publish_slip_ratios();
   
-  // Helper method to calculate jitter
+  // Helper methods to calculate jitter
   void calculate_and_publish_vectornav_jitter();
+  void calculate_and_publish_novatel_jitter();
 };
