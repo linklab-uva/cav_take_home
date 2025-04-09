@@ -121,6 +121,19 @@ void TakeHome::curvilinear_distance_callback(std_msgs::msg::Float32::ConstShared
   
   // Check if we're at distance 0.0 (beginning of a lap)
   bool is_zero = std::abs(curvilinear_distance) < 1e-6;
+
+  // Check for large distance jump between consecutive callbacks
+  if (!is_zero && last_curvilinear_distance_ >= 0.0) {
+    double distance_diff = std::abs(curvilinear_distance - last_curvilinear_distance_);
+    // If there's a large distance jump between consecutive callbacks (> 5.0 meters)
+    if (distance_diff > 5.0) {
+      // Reset lap timer state
+      first_zero_seen_ = false;
+      lap_start_time_ = 0.0;
+      last_curvilinear_distance_ = -1.0;
+      RCLCPP_INFO(this->get_logger(), "Large distance jump detected: %f meters", distance_diff);
+    }
+  }
   
   // If we're at 0.0 and the previous value wasn't 0.0, then we've completed a lap
   if (is_zero && !previous_value_was_zero_) {
@@ -147,6 +160,9 @@ void TakeHome::curvilinear_distance_callback(std_msgs::msg::Float32::ConstShared
   
   // Update previous value flag
   previous_value_was_zero_ = is_zero;
+  
+  // Store current distance for next callback
+  last_curvilinear_distance_ = curvilinear_distance;
 }
 
 /**
@@ -156,6 +172,12 @@ void TakeHome::curvilinear_distance_callback(std_msgs::msg::Float32::ConstShared
 void TakeHome::vectornav_imu_callback(vectornav_msgs::msg::ImuGroup::ConstSharedPtr imu_msg) {
   // Extract timestamp from the message
   double current_timestamp = imu_msg->header.stamp.sec + imu_msg->header.stamp.nanosec / 1e9;
+  
+  if (!vectornav_timestamps_.empty() && 
+      std::abs(current_timestamp - vectornav_timestamps_.back()) > 1.0) {
+    // Clear timestamp data if the entire sliding window is outdated
+    vectornav_timestamps_.clear();
+  }
   
   // Store timestamp in the deque
   vectornav_timestamps_.push_back(current_timestamp);
@@ -282,6 +304,12 @@ void TakeHome::calculate_and_publish_slip_ratios() {
 void TakeHome::novatel_imu_callback(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr imu_msg) {
   // Extract timestamp from the message
   double current_timestamp = imu_msg->header.stamp.sec + imu_msg->header.stamp.nanosec / 1e9;
+  
+  if (!novatel_timestamps_.empty() && 
+      std::abs(current_timestamp - novatel_timestamps_.back()) > 1.0) {
+    // Clear timestamp data if the entire sliding window is outdated
+    novatel_timestamps_.clear();
+  }
   
   // Store timestamp in the deque
   novatel_timestamps_.push_back(current_timestamp);

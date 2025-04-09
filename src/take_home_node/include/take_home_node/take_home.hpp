@@ -73,6 +73,7 @@ class TakeHome : public rclcpp::Node {
   double lap_start_time_ = 0.0;  // Time when curvilinear distance was 0.0
   bool previous_value_was_zero_ = false;  // Flag to track if previous value was 0.0
   bool first_zero_seen_ = false;  // Flag to track if we've seen the first 0.0
+  double last_curvilinear_distance_ = -1.0;  // Distance of the last curvilinear callback
   
   // Helper method to calculate slip ratios
   void calculate_and_publish_slip_ratios();
