@@ -8,7 +8,7 @@ Unless you have a reason not to, set Windows Terminal as the default terminal em
 1. Open PowerShell as an administrator and run the following command to install WSL 2 & Ubuntu:
 
 ```bash
-wsl --install
+wsl --install -d Ubuntu-22.04
 ```
 
 2. Once this process is complete reboot your device. Upon reboot you will be prompted to create a new user account for WSL. This account can be different from your Windows account. Set a username and password for this account. Note that linux will not display the password as you type it in.
