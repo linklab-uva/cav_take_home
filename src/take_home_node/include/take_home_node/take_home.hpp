@@ -66,7 +66,7 @@ class TakeHome : public rclcpp::Node {
   float latest_wheel_speed_rr_ = 0.0;
   
   // Jitter calculation variables
-  std::deque<double> vectornav_timestamps_;  // Store timestamps for jitter calculation
+  std::deque<double> vectornav_timestamps_;  // Store timestamps for vectornav jitter calculation
   std::deque<double> novatel_timestamps_;    // Store timestamps for novatel jitter calculation
   
   // Lap time tracking variables

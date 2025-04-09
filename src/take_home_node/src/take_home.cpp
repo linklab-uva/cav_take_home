@@ -86,7 +86,7 @@ void TakeHome::odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom_ms
 
 /**
  * Callback for wheel speed reports
- * Stores wheel speeds for all four wheels in radians per second
+ * Stores wheel speeds for all four wheels in meters per second
  */
 void TakeHome::wheel_speed_callback(raptor_dbw_msgs::msg::WheelSpeedReport::ConstSharedPtr wheel_speed_msg) {
   // Convert wheel speeds from km/h to m/s for slip ratio calculation
@@ -122,22 +122,19 @@ void TakeHome::curvilinear_distance_callback(std_msgs::msg::Float32::ConstShared
   // Check if we're at distance 0.0 (beginning of a lap)
   bool is_zero = std::abs(curvilinear_distance) < 1e-6;
 
-  // Check for large distance jump between consecutive callbacks
+  // Check for large distance jump between consecutive callbacks (useful for resetting state when restarting bag file)
   if (!is_zero && last_curvilinear_distance_ >= 0.0) {
     double distance_diff = std::abs(curvilinear_distance - last_curvilinear_distance_);
-    // If there's a large distance jump between consecutive callbacks (> 5.0 meters)
+    // If there's a large distance jump between consecutive callbacks (> 5.0 meters) (likely need a more robust solution in practice)
     if (distance_diff > 5.0) {
-      // Reset lap timer state
       first_zero_seen_ = false;
       lap_start_time_ = 0.0;
       last_curvilinear_distance_ = -1.0;
-      RCLCPP_INFO(this->get_logger(), "Large distance jump detected: %f meters", distance_diff);
     }
   }
   
   // If we're at 0.0 and the previous value wasn't 0.0, then we've completed a lap
   if (is_zero && !previous_value_was_zero_) {
-    // Get the current time
     double current_time = this->now().seconds();
     
     // If we've already seen a starting point (first 0.0), calculate lap time
@@ -150,7 +147,7 @@ void TakeHome::curvilinear_distance_callback(std_msgs::msg::Float32::ConstShared
       lap_time_msg.data = static_cast<float>(lap_time);
       lap_time_publisher_->publish(lap_time_msg);
     } else {
-      // This is the first time we've seen 0.0, so mark this point
+      // This is the first time we've seen 0.0, so mark this point as the start of a lap
       first_zero_seen_ = true;
     }
     
@@ -223,7 +220,7 @@ void TakeHome::calculate_and_publish_vectornav_jitter() {
   }
   variance /= deltas.size();
   
-  // Publish jitter (variance)
+  // Publish jitter
   std_msgs::msg::Float32 jitter_msg;
   jitter_msg.data = static_cast<float>(variance);
   vectornav_jitter_publisher_->publish(jitter_msg);
@@ -231,7 +228,6 @@ void TakeHome::calculate_and_publish_vectornav_jitter() {
 
 /**
  * Calculate slip ratios for all four wheels and publish them to their respective topics
- * Uses the formulas provided in the assignment description
  */
 void TakeHome::calculate_and_publish_slip_ratios() {
   // Create messages for each wheel's slip ratio
@@ -356,7 +352,7 @@ void TakeHome::calculate_and_publish_novatel_jitter() {
   }
   variance /= deltas.size();
   
-  // Publish jitter (variance)
+  // Publish jitter
   std_msgs::msg::Float32 jitter_msg;
   jitter_msg.data = static_cast<float>(variance);
   novatel_jitter_publisher_->publish(jitter_msg);
