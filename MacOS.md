@@ -50,6 +50,7 @@ Now, run the following commands to enter the container as the user you just crea
 docker exec -it --user [your_username] cav_container /bin/bash
 sudo apt update
 sudo apt install -y openssh-server
+sudo apt install net-tools
 sudo service ssh start
 ```
 Now, our setup is complete!
@@ -68,17 +69,25 @@ Now, follow the instructions in the docs for [installing ROS](https://docs.ros.o
 
 ## Writing Code
 
-In later steps you will need to write code. Use [VSCode's SSH](https://code.visualstudio.com/docs/remote/ssh) extension to access it. Install the VSCode extension and use "[username]@localhost:2222" as the host to connect to. From here, you can open a folder, create and edit files, and even use the integrated terminal to access your docker container. (Or just use Vim if you're built different). 
+Ensure that ssh is still running and find the IP address.
+```
+sudo service ssh restart
+ifconfig
+```
+
+The `ifconfig` command outputs some networking information about your container. Look for the word "inet" and look for the IP next to it. If you see multiple entries, use one that isn't `127.0.0.1`. For example, the IP address for my Docker container is `172.17.0.2`. Use this IP address for later steps.
+
+In later steps you will need to write code. Use [VSCode's SSH](https://code.visualstudio.com/docs/remote/ssh) extension to access it. Install the VSCode extension and use "[username]@<ip_address>:2222" as the host to connect to. Use the IP address you found from the `ifconfig` command. From here, you can open a folder, create and edit files, and even use the integrated terminal to access your docker container. (Or just use Vim if you're built different). 
 
 ## Visualization with Foxglove
 In later steps, you will see "RViz" or "Foxglove". Use Foxglove for visualization (RViz does not work nicely on Mac).
 
-Click "Open connection..." on Foxglove and use "ws://localhost:8765" as the websocket URL. For more detailed instructions on using Foxglove, see the main README file. This will show you how to set up the Foxglove bridge to use Foxglove.
+Click "Open connection..." on Foxglove and use "ws://<ip_address>:8765" as the websocket URL. Use the IP address that you found earlier by running `ifconfig`. For more detailed instructions on using Foxglove, see the main README file. This will show you how to set up the Foxglove bridge to use Foxglove.
 
 ## Getting Files into Docker
 After you install git into your Docker container, you can clone the repository directly into your docker container.
 
 You can move files from your local computer to the docker container using the [scp] (https://stackoverflow.com/questions/19945881/copy-file-folder-using-scp-command) utility. For example, if you downloaded the `cavalier_take_home.mcap` file to `~/Downloads/` on your local computer and want to move it to your Docker container, you can run the following command from your computer:
 ```
-scp -P 2222 ~/Downloads/cavalier_take_home.mcap akash@localhost:~/
+scp -P 2222 ~/Downloads/cavalier_take_home.mcap akash@<ip_address>:~/
 ```

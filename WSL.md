@@ -105,3 +105,25 @@ After installing ROS2, make sure to install the following dependencies.
 ```
 sudo apt install ros-humble-camera-info-manager ros-humble-backward-ros ros-humble-ros2-socketcan ros-humble-image-proc ros-humble-camera-info-manager ros-humble-stereo-image-proc ros-humble-tracetools-image-pipeline ros-humble-udp-msgs ros-humble-rviz-common ros-humble-geographic-msgs ros-humble-angles ros-humble-osrf-testing-tools-cpp ros-humble-ament-cmake-google-benchmark ros-humble-random-numbers ros-humble-ros-testing ros-humble-point-cloud-msg-wrapper ros-humble-automotive-platform-msgs ros-humble-apex-test-tools ros-humble-pcl-ros ros-humble-joy-linux ros-humble-sensor-msgs-py ros-humble-gps-msgs ros-humble-nmea-msgs ros-humble-gps-tools ros-humble-can-msgs ros-humble-tf-transformations ros-humble-ament-cmake-nose ros-humble-rmw-cyclonedds-cpp ros-humble-rosbag2-storage-mcap ros-humble-camera-calibration ros-humble-foxglove-bridge -y
 ```
+
+## Writing Code
+
+Ensure that ssh is still running and find the IP address.
+```
+sudo service ssh restart
+ifconfig
+```
+
+The `ifconfig` command outputs some networking information about your WSL environment. Look for the word "inet" and look for the IP next to it. If you see multiple entries, use one that isn't `127.0.0.1`. For example, the IP address for my WSL environment is `172.17.0.2`. Use this IP address for later steps.
+
+In later steps you will need to write code. Use [VSCode's SSH](https://code.visualstudio.com/docs/remote/ssh) extension to access it. Install the VSCode extension and use "[username]@<ip_address>:2222" as the host to connect to. Use the IP address you found from the `ifconfig` command. From here, you can open a folder, create and edit files, and even use the integrated terminal to access your WSL environment. (Or just use Vim if you're built different). 
+
+## Visualization with Foxglove
+In later steps, you will see "RViz" or "Foxglove". Use Foxglove for visualization (RViz does not work nicely on Mac).
+
+Click "Open connection..." on Foxglove and use "ws://<ip_address>:8765" as the websocket URL. Use the IP address that you found earlier by running `ifconfig`. For more detailed instructions on using Foxglove, see the main README file. This will show you how to set up the Foxglove bridge to use Foxglove.
+
+## Getting Files into WSL
+After you install git into your WSL environment, you can clone the repository directly into WSL environment.
+
+You can move files from your local computer to the WSL environment using the [scp] (https://stackoverflow.com/questions/19945881/copy-file-folder-using-scp-command) utility.
