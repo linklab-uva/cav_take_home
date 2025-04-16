@@ -41,7 +41,7 @@ wsl --set-version Ubuntu 2
 
 ### Install ROS
 
-The team utilizes ROS Humble. Open Ubuntu and run the following commands:
+The team utilizes ROS Humble. Open Ubuntu and run the following commands in your WSL environment:
 
 ```bash
 sudo apt install software-properties-common
@@ -107,23 +107,11 @@ sudo apt install ros-humble-camera-info-manager ros-humble-backward-ros ros-humb
 ```
 
 ## Writing Code
+After setup, you should clone this repository inside your WSL environment and follow the rest of the instructions in the main README. Make sure to put the your files somewhere inside `/home/username` or one of its sub-directories for the best experience with WSL.
 
-Ensure that ssh is still running and find the IP address.
-```
-sudo service ssh restart
-ifconfig
-```
-
-The `ifconfig` command outputs some networking information about your WSL environment. Look for the word "inet" and look for the IP next to it. If you see multiple entries, use one that isn't `127.0.0.1`. For example, the IP address for my WSL environment is `172.17.0.2`. Use this IP address for later steps.
-
-In later steps you will need to write code. Use [VSCode's SSH](https://code.visualstudio.com/docs/remote/ssh) extension to access it. Install the VSCode extension and use "[username]@<ip_address>:2222" as the host to connect to. Use the IP address you found from the `ifconfig` command. From here, you can open a folder, create and edit files, and even use the integrated terminal to access your WSL environment. (Or just use Vim if you're built different). 
+There are multiple ways to edit files inside your WSL environment. The easiest is to use the [VSCode app and its extension for WSL](https://code.visualstudio.com/docs/remote/wsl). Follow the linked instructions to install and setup the extension. To edit code, simply run `code .` and this will open a Visual Studio Code window in the current folder.
 
 ## Visualization with Foxglove
-In later steps, you will see "RViz" or "Foxglove". Use Foxglove for visualization (RViz does not work nicely on Mac).
+In later steps, you will see "RViz" or "Foxglove". We recommend Foxglove for visualization.
 
-Click "Open connection..." on Foxglove and use "ws://<ip_address>:8765" as the websocket URL. Use the IP address that you found earlier by running `ifconfig`. For more detailed instructions on using Foxglove, see the main README file. This will show you how to set up the Foxglove bridge to use Foxglove.
-
-## Getting Files into WSL
-After you install git into your WSL environment, you can clone the repository directly into WSL environment.
-
-You can move files from your local computer to the WSL environment using the [scp] (https://stackoverflow.com/questions/19945881/copy-file-folder-using-scp-command) utility.
+Click "Open connection..." on Foxglove and use "ws://localhost:8765" as the websocket URL. Remember that in order to see anything in Foxglove, you should launch the Foxglove bridge with `ros2 launch foxglove_bridge foxglove_bridge_launch.xml`.
