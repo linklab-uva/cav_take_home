@@ -13,7 +13,19 @@ TakeHome::TakeHome(const rclcpp::NodeOptions& options)
       "vehicle/uva_odometry", qos_profile,
       std::bind(&TakeHome::odometry_callback, this, std::placeholders::_1));
 
-      metric_publisher_ = this->create_publisher<std_msgs::msg::Float32>("metrics_output", qos_profile);
+    wheelspeed_subscriber_ = this->create_subscription<raptor_dbw_msgs::msg::WheelSpeedReport>(
+      "/raptor_dbw_interface/wheel_speed_report", qos_profile, 
+      std::bind(&TakeHome::wheelspeed_callback, this, std::placeholders::_1));
+    
+    steering_subscriber_ = this->create_subscription<raptor_dbw_msgs::msg::SteeringExtendedReport>(
+      "/raptor_dbw_interface/steering_extended_report", qos_profile, 
+      std::bind(&TakeHome::steering_callback, this, std::placeholders::_1));
+    
+    slip_rr_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/rr", qos_profile);
+    slip_rl_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/rl", qos_profile);
+    slip_fr_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/fr", qos_profile);
+    slip_fl_ = this->create_publisher<std_msgs::msg::Float32>("slip/long/fl", qos_profile);
+    metric_publisher_ = this->create_publisher<std_msgs::msg::Float32>("metrics_output", qos_profile);
 }
 
 // 
@@ -35,5 +47,33 @@ void TakeHome::odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom_ms
   metric_publisher_->publish(metric_msg);
 }
 
+void TakeHome::wheelspeed_callback(raptor_dbw_msgs::msg::WheelSpeedReport::ConstSharedPtr wheelspeed_msg) {
+  TakeHome::wheelspeed_msg = wheelspeed_msg;
+}
+
+void TakeHome::steering_callback(raptor_dbw_msgs::msg::SteeringExtendedReport::ConstSharedPtr steering_msg) {
+  TakeHome::steering_msg = steering_msg;
+}
+bool TakeHome::publish_slip_ratios() {
+  if(TakeHome::wheelspeed_msg == NULL || TakeHome::steering_msg == NULL || TakeHome::odom_msg == NULL) return false;
+  float v_x = TakeHome::odom_msg->twist.twist.linear.x;
+  float yaw = TakeHome::odom_msg->twist.twist.angular.z;
+
+  //rear right
+  float v_xrr = v_x-0.5*yaw*TakeHome::w_r;
+  float vw_rr = TakeHome::wheelspeed_msg->rear_right;
+  float k_rr = (vw_rr-v_xrr)/v_xrr;
+  std_msgs::msg::Float32 slip_ratio;
+  slip_ratio.data = k_rr;
+  TakeHome::slip_rr_->publish(slip_ratio);
+
+  //rear left
+  float v_xrl = v_x+0.5*yaw*TakeHome::w_r;
+  float vw_rl = TakeHome::wheelspeed_msg-> rear_left;
+  float k_rl = (vw_rl-v_xrl)/v_xrl;
+  slip_ratio.data = k_rl;
+  TakeHome::slip_rl_->publish(slip_ratio);
+
+}
 
 RCLCPP_COMPONENTS_REGISTER_NODE(TakeHome)

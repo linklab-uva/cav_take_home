@@ -36,6 +36,7 @@ ament_target_dependencies(${PROJECT_NAME}
   nav_msgs
   geometry_msgs
   std_msgs
+  raptor_dbw_msgs
   ament_index_cpp
   uva_iac_msgs
   deep_orange_msgs
