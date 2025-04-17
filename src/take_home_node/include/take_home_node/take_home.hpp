@@ -26,11 +26,13 @@ class TakeHome : public rclcpp::Node {
   const float w_f = 1.638;
   const float w_r = 1.523;
   const float l_f = 1.7238;
+
   
   // Store last message from each subscriber
   nav_msgs::msg::Odometry::ConstSharedPtr odom_msg = NULL;
   raptor_dbw_msgs::msg::WheelSpeedReport::ConstSharedPtr wheelspeed_msg = NULL;
   raptor_dbw_msgs::msg::SteeringExtendedReport::ConstSharedPtr steering_msg = NULL;
+  // float steering_angle = 0;
 
   // Subscribers and Publishers
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_subscriber_;
