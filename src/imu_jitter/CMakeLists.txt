@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(take_home)
+project(jitter_node)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -20,7 +20,7 @@ find_package(deep_orange_msgs REQUIRED)
 
 # Create the library
 add_library(${PROJECT_NAME} SHARED
-  src/take_home.cpp
+  src/jitter_node.cpp
 )
 
 # Include directories and dependencies for the library
@@ -50,8 +50,8 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}
-  PLUGIN "TakeHome"
-  EXECUTABLE take_home_node
+  PLUGIN "JitterNode"
+  EXECUTABLE jitter_node
 )
 
 # Install launch files and config

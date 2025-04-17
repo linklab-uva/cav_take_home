@@ -10,9 +10,9 @@
 #include <rclcpp/node_options.hpp>
 #include <rclcpp/rclcpp.hpp>
 
-class TakeHome : public rclcpp::Node {
+class SlipNode : public rclcpp::Node {
  public:
-  TakeHome(const rclcpp::NodeOptions& options);
+  SlipNode(const rclcpp::NodeOptions& options);
 
   void odometry_callback(nav_msgs::msg::Odometry::ConstSharedPtr odom_msg);
 
