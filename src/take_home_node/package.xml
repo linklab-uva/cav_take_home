@@ -13,6 +13,7 @@
   <depend>sensor_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>novatel_oem7_msgs</depend>
   <depend>std_msgs</depend>
   <depend>uva_iac_msgs</depend>
   <depend>raptor_dbw_msgs</depend>
