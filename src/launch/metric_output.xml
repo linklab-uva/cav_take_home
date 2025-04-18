@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <node pkg="imu_jitter" exec="jitter_node"/>
+  <node pkg="lap_time" exec="lap_time_node"/>
+  <node pkg="slip_node" exec="wheel_slip_node"/>
+</launch>
