@@ -3,7 +3,7 @@
 <package format="3">
   <name>imu_jitter</name>
   <version>0.0.1</version>
-  <description>Trajectory propagation node for path prediction</description>
+  <description>Calculate IMU jitter</description>
   <maintainer email="your@email.com">Your Name</maintainer>
   <license>TODO</license>
 

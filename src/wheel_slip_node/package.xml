@@ -3,7 +3,7 @@
 <package format="3">
   <name>slip_node</name>
   <version>0.0.1</version>
-  <description>Trajectory propagation node for path prediction</description>
+  <description>Calculate wheel slip ratios</description>
   <maintainer email="your@email.com">Your Name</maintainer>
   <license>TODO</license>
 

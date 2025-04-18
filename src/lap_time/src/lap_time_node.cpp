@@ -19,14 +19,16 @@ LapTimeNode::LapTimeNode(const rclcpp::NodeOptions& options)
 }
 
 void LapTimeNode::cl_distance_callback(std_msgs::msg::Float32::ConstSharedPtr cl_distance_msg) {
-  if(last_dist> cl_distance_msg->data) {
+  if(last_dist> cl_distance_msg->data+1000) {
     int dt_s = odom_msg->header.stamp.sec-start_sec; //odom_msg shouldnt be null here, so no check
     int dt_ns = odom_msg->header.stamp.nanosec-start_nsec;
-    float dt = float(dt_s) + float(dt_ns)/1000000.0;
+    float dt = float(dt_s) + float(dt_ns)/1000000000.0;
     std_msgs::msg::Float32 time_diff;
     time_diff.data = dt;
     laptime_publisher_->publish(time_diff);
     RCLCPP_DEBUG_STREAM(this->get_logger(), "Starting new lap, lap time was: " << dt);
+    start_sec = odom_msg->header.stamp.sec;
+    start_nsec = odom_msg->header.stamp.nanosec;
   }
   last_dist = cl_distance_msg->data;
 }
