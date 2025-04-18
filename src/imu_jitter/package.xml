@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>jitter_node</name>
+  <name>imu_jitter</name>
   <version>0.0.1</version>
   <description>Trajectory propagation node for path prediction</description>
   <maintainer email="your@email.com">Your Name</maintainer>
@@ -16,6 +16,7 @@
   <depend>std_msgs</depend>
   <depend>uva_iac_msgs</depend>
   <depend>raptor_dbw_msgs</depend>
+  <depend>novatel_oem7_msgs</depend>
   <depend>deep_orange_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>

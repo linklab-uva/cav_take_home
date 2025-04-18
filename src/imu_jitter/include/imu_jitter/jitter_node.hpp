@@ -7,7 +7,7 @@
 #include <rclcpp/node.hpp>
 #include <rclcpp/node_options.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <queue>
+#include <vector>
 
 class JitterNode : public rclcpp::Node {
  public:
@@ -16,9 +16,9 @@ class JitterNode : public rclcpp::Node {
   void imu_callback(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr imu_msg);
 
  private:
-  
+  float get_variance();
   // Stores imu msgs within last second
-  
+  std::vector<novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr> msgArr;
 
   // Subscribers and Publishers
   rclcpp::Subscription<novatel_oem7_msgs::msg::RAWIMU>::SharedPtr imu_subscriber_;
