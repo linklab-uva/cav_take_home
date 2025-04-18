@@ -46,6 +46,7 @@ class TakeHome : public rclcpp::Node {
 
   rclcpp::Subscription<novatel_oem7_msgs::msg::RAWIMU>::SharedPtr rawimu_subscriber_;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr jitter_publisher_;
+  //using a deque to store only the timestamps I need
   std::deque<double> imu_timestamps;
 
   rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr curvilinear_distance_subscriber_;
