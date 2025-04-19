@@ -17,7 +17,7 @@ class JitterNode : public rclcpp::Node {
 
  private:
 
-  float get_time(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr msg);
+  double get_time(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr msg);
   
   float get_variance();
   // Stores imu msgs within last second

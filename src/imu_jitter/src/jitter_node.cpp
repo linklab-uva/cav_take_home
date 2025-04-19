@@ -14,18 +14,18 @@ JitterNode::JitterNode(const rclcpp::NodeOptions& options)
       "imu_top/jitter", qos_profile);
 }
 
-float JitterNode::get_time(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr msg) {
-  return (msg->header.stamp.sec + (float)msg->header.stamp.nanosec/10e9);
+double JitterNode::get_time(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr msg) {
+  return (static_cast<double>(msg->header.stamp.sec) + static_cast<double>(msg->header.stamp.nanosec)/1e9f);
 }
 
 float JitterNode::get_variance() {
-  float meandt = (get_time(msgArr[msgArr.size()-1]) - get_time(msgArr[0]))/(msgArr.size()-1);
-  float smsq = 0.0;
+  double meandt = (get_time(msgArr[msgArr.size()-1]) - get_time(msgArr[0]))/(msgArr.size()-1);
+  double smsq = 0.0;
   for(size_t i=1; i<msgArr.size(); i++) {
-    float dt = get_time(msgArr[i]) - get_time(msgArr[i-1]);
+    double dt = get_time(msgArr[i]) - get_time(msgArr[i-1]);
     smsq += (dt-meandt)*(dt-meandt);
   }
-  return smsq/(msgArr.size()-2);
+  return static_cast<float>(smsq/(msgArr.size()-2));
 }
 
 void JitterNode::imu_callback(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr imu_msg) {

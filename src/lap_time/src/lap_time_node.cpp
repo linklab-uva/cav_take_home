@@ -26,7 +26,7 @@ void LapTimeNode::cl_distance_callback(std_msgs::msg::Float32::ConstSharedPtr cl
     std_msgs::msg::Float32 time_diff;
     time_diff.data = dt;
     laptime_publisher_->publish(time_diff);
-    RCLCPP_DEBUG_STREAM(this->get_logger(), "Starting new lap, lap time was: " << dt);
+    RCLCPP_INFO(this->get_logger(), "Starting new lap, lap time was: %f", dt);
     start_sec = odom_msg->header.stamp.sec;
     start_nsec = odom_msg->header.stamp.nanosec;
   }
