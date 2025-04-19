@@ -14,28 +14,30 @@ JitterNode::JitterNode(const rclcpp::NodeOptions& options)
       "imu_top/jitter", qos_profile);
 }
 
+float JitterNode::get_time(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr msg) {
+  return (msg->header.stamp.sec + (float)msg->header.stamp.nanosec/10e9);
+}
+
+float JitterNode::get_variance() {
+  float meandt = (get_time(msgArr[msgArr.size()-1]) - get_time(msgArr[0]))/(msgArr.size()-1);
+  float smsq = 0.0;
+  for(size_t i=1; i<msgArr.size(); i++) {
+    float dt = get_time(msgArr[i]) - get_time(msgArr[i-1]);
+    smsq += (dt-meandt)*(dt-meandt);
+  }
+  return smsq/(msgArr.size()-2);
+}
 
 void JitterNode::imu_callback(novatel_oem7_msgs::msg::RAWIMU::ConstSharedPtr imu_msg) {
-  JitterNode::msgArr.push_back(imu_msg);
-  if(JitterNode::msgArr.size()<=2) return;
+  msgArr.push_back(imu_msg);
+  if(msgArr.size()<=2) return; //variance of <=1 sample is undefined 
   int i = 0;
-  while(imu_msg->gnss_seconds-JitterNode::msgArr[i]->gnss_seconds > 1) i++;
-  msgArr.erase(JitterNode::msgArr.begin(), JitterNode::msgArr.begin()+i); 
+  while(get_time(imu_msg) - get_time(msgArr[i])> 1.0) i++;
+  msgArr.erase(msgArr.begin(), msgArr.begin()+i); 
   float variance = get_variance();
   std_msgs::msg::Float32 vmsg;
   vmsg.data = variance;
   jitter_publisher_->publish(vmsg);
-}
-
-float JitterNode::get_variance() {
-  auto ar = JitterNode::msgArr; 
-  float meandt = (ar[ar.size()-1]->gnss_seconds - ar[0]->gnss_seconds)/(ar.size()-1);
-  float smsq = 0.0;
-  for(size_t i=1; i<ar.size(); i++) {
-    float dt = ar[i]->gnss_seconds-ar[i-1]->gnss_seconds;
-    smsq += (dt-meandt)*(dt-meandt);
-  }
-  return smsq/(ar.size()-2);
 }
 
 RCLCPP_COMPONENTS_REGISTER_NODE(JitterNode)
